@@ -5,33 +5,58 @@ public class Student {
     private double averageGrade;
     private long studentBookNumber;
 
-    public Student(int groupNumber, double averageGrade, long studentBookNumber) {
+    private Student(int groupNumber, double averageGrade, long studentBookNumber) {
         this.groupNumber = groupNumber;
         this.averageGrade = averageGrade;
         this.studentBookNumber = studentBookNumber;
+    }
+
+    public Student() {
     }
 
     public int getGroupNumber() {
         return groupNumber;
     }
 
-    public void setGroupNumber(int groupNumber) {
-        this.groupNumber = groupNumber;
-    }
-
     public double getAverageGrade() {
         return averageGrade;
-    }
-
-    public void setAverageGrade(double averageGrade) {
-        this.averageGrade = averageGrade;
     }
 
     public long getStudentBookNumber() {
         return studentBookNumber;
     }
 
-    public void setStudentBookNumber(long studentBookNumber) {
-        this.studentBookNumber = studentBookNumber;
+    @Override
+    public String toString() {
+        return "Student{" +
+                "groupNumber=" + groupNumber +
+                ", averageGrade=" + averageGrade +
+                ", studentBookNumber=" + studentBookNumber +
+                '}';
+    }
+
+    public static class StudentBuilder {
+        private int groupNumber;
+        private double averageGrade;
+        private long studentBookNumber;
+
+        public StudentBuilder withGroupNumber(int groupNumber) {
+            this.groupNumber = groupNumber;
+            return this;
+        }
+
+        public StudentBuilder withAverageGrade(double averageGrade) {
+            this.averageGrade = averageGrade;
+            return this;
+        }
+
+        public StudentBuilder withStudentBookNumber(long studentBookNumber) {
+            this.studentBookNumber = studentBookNumber;
+            return this;
+        }
+
+        public Student build() {
+            return new Student(groupNumber, averageGrade, studentBookNumber);
+        }
     }
 }
