@@ -41,9 +41,9 @@ public class BusHandler extends Handler {
         System.out.println("Введите количество пройденных миль: ");
         int mileage = scanner.nextInt();
 
-        Bus bus = new Bus(number, modelBus, mileage);
+        //Bus bus = new Bus(number, modelBus, mileage);
 
-        model.addBus(bus);
+        //model.addBus(bus);
     }
 
 }
