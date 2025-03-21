@@ -5,8 +5,13 @@ public class CustomArrayList <T> {
     //размер массива
     private int size;
 
+    //размер списка
+    public int size() {
+        return size;
+    }
+
     //стандартная емкость
-    private static int DEFAULT_CAPACITY = 10;
+    private static final int DEFAULT_CAPACITY = 10;
 
     //конструктор по умолчанию
     public CustomArrayList() {
@@ -38,30 +43,29 @@ public class CustomArrayList <T> {
         System.arraycopy(objects, 0, newArray, 0, size);
         objects = newArray;
     }
-
-    // объект по индексу
-    public T get(int index) {
-        if (index < 0 || index >= size) {
+    //проврека индекса, входит ли он в диапазон
+    private void checkIndex(int index) {
+        if (index < 0 || index >= objects.length) {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
+    }
+
+    // поиск объекта по индексу
+    public T get(int index) {
+        checkIndex(index);
         return (T) objects[index];
     }
 
-    //поиск элемента по индексу
-    public int checkIndex(int index) {
-          if (index < 0 || index >= objects.length)
-                throw new IndexOutOfBoundsException();
-            return index;
+    public T set(int index, T element) {
+        // Проверка корректности индекса
+        checkIndex(index);
+        // Получаем старый элемент
+        T oldValue = (T) objects[index];
+        // Заменяем элемент в массиве
+        objects[index] = element;
 
+        return oldValue;
     }
-
-    //размер списка
-    public int size() {
-        return size;
-    }
-
-
-
 
 
 }
