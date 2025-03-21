@@ -6,27 +6,18 @@ public class MainHandler extends Handler {
 
     public MainHandler(){
         super(null, new MainMenu());
+        menuMap.put(1, new BusHandler(this));
+        menuMap.put(2, new StudenHandler(this));
+        menuMap.put(3, new UserHandler(this));
+    }
+
+    @Override
+    protected void handle(int numberMenu){
+        System.out.println("Вы в главном меню");
     }
 
     @Override
     public Handler process(int numberMenu) {
-        Handler handler = this;
-        switch (numberMenu) {
-            case 0:
-                handler = parentHandler;
-                break;
-            case 1:
-                handler = new BusHandler(this);
-                break;
-            case 2:
-                handler = new StudenHandler(this);
-                break;
-            case 3:
-                handler = new UserHandler(this);
-                break;
-            default:
-                System.out.println("Invalid number menu");
-        }
-        return handler;
+        return getItemHandler(numberMenu);
     }
 }

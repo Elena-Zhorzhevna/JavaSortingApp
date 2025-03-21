@@ -9,15 +9,15 @@ public class BusHandler extends Handler {
 
     public BusHandler(Handler handler) {
         super(handler, new BusMenu());
+        menuMap.put(1, this);
+        menuMap.put(2, this);
+        menuMap.put(3, this);
+        menuMap.put(4, this);
     }
 
     @Override
-    public Handler process(int numberMenu) {
-        Handler handler = this;
+    protected void handle(int numberMenu) {
         switch (numberMenu) {
-            case 0:
-                handler = parentHandler;
-                break;
             case 1:
                 addElement();
                 break;
@@ -25,8 +25,8 @@ public class BusHandler extends Handler {
                 break;
             case 4:
                 System.out.println(getPWD());
+                break;
         }
-        return handler;
     }
 
     public void addElement() {
