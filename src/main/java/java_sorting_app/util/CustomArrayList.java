@@ -1,3 +1,5 @@
+package java_sorting_app.util;
+
 public class CustomArrayList <T> {
     //массив для листа
     private Object[] objects;

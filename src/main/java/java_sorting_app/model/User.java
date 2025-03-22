@@ -1,4 +1,4 @@
-package main.java.model;
+package java_sorting_app.model;
 
 public class User {
     private String name;
