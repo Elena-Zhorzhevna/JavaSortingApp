@@ -40,6 +40,10 @@ public class Student {
         private double averageGrade;
         private long studentBookNumber;
 
+        public static StudentBuilder create() {
+            return new StudentBuilder();
+        }
+
         public StudentBuilder withGroupNumber(int groupNumber) {
             this.groupNumber = groupNumber;
             return this;
