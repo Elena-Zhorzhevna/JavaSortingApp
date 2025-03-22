@@ -40,6 +40,10 @@ public class User {
         private String password;
         private String email;
 
+        public static UserBuilder create() {
+            return new UserBuilder();
+        }
+
         public UserBuilder withName(String name) {
             this.name = name;
             return this;

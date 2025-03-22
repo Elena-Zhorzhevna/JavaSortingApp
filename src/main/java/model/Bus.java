@@ -40,6 +40,10 @@ public class Bus {
         private String model;
         private int mileage;
 
+        public static BusBuilder create() {
+            return new BusBuilder();
+        }
+
         public BusBuilder withNumber(String number) {
             this.number = number;
             return this;
