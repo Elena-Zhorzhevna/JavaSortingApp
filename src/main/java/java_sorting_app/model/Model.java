@@ -41,4 +41,8 @@ public class Model {
     public void addBus(Bus bus) {
         buses.add(bus);
     }
+
+    public void addBusesList(List<Bus> busesList) {
+        buses.addAll(busesList);
+    }
 }

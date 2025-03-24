@@ -4,10 +4,11 @@ public class MainHandler extends Handler {
 
     public MainHandler(){
         super("Главное меню");
-        menuController.addItem(1, "Работа с автобусами", new BusHandler(this));
-        menuController.addItem(2, "Работа со студентами", new StudentHandler(this));
-        menuController.addItem(3, "Работа с пользователями", new UserHandler(this));
-        menuController.addItem(0, "Выход", null);
+        menuController.addItem(1, "\uD83D\uDDC0 Автобусы", new BusHandler(this));
+        menuController.addItem(2, "\uD83D\uDDC0 Студенты", new StudentHandler(this));
+        menuController.addItem(3, "\uD83D\uDDC0 Пользователи", new UserHandler(this));
+        menuController.addItem(0, "⮤ Выход", null);
+        menuController.setAnnotation("Выберите коллекцию для работы:");
     }
 
     @Override
