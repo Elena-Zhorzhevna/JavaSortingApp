@@ -1,14 +1,14 @@
 package java_sorting_app.handlers;
-
 import java_sorting_app.model.Model;
 import java_sorting_app.menu.MenuController;
+
 
 public abstract class Handler {
 
     protected static Model model;
 
     protected MenuController menuController;
-
+    
     public Handler(String title) {
         menuController = new MenuController(title);
     }
@@ -16,7 +16,7 @@ public abstract class Handler {
     public static void setModel(Model model) {
         Handler.model = model;
     }
-
+    
     public String getMenu(){
         return menuController.buildMenu();
     }
@@ -39,7 +39,7 @@ public abstract class Handler {
         }
         return menuController.getHandler(numberMenu);
     }
-
+    
     public String getPWD(){
         Handler parentHandler = menuController.getHandler(0);
         if(parentHandler != null){

@@ -1,6 +1,8 @@
 package java_sorting_app.model;
 
-public class Bus {
+import java.io.Serializable;
+
+public class Bus implements Serializable {
     private String number;
     private String model;
     private int mileage;
@@ -11,7 +13,8 @@ public class Bus {
         this.mileage = mileage;
     }
 
-    public Bus() {
+    public static BusBuilder create() {
+        return new BusBuilder();
     }
 
     public String getNumber() {
@@ -39,10 +42,6 @@ public class Bus {
         private String number;
         private String model;
         private int mileage;
-
-        public static BusBuilder create() {
-            return new BusBuilder();
-        }
 
         public BusBuilder withNumber(String number) {
             this.number = number;

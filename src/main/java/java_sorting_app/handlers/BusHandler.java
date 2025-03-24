@@ -1,5 +1,9 @@
 package java_sorting_app.handlers;
 
+import java_sorting_app.loaders.FileLoader;
+import java_sorting_app.loaders.ManualLoader;
+import java_sorting_app.loaders.RandomLoader;
+import java_sorting_app.model.Bus;
 import java.util.Scanner;
 
 public class BusHandler extends Handler {
@@ -17,7 +21,7 @@ public class BusHandler extends Handler {
     protected void handle(int numberMenu) {
         switch (numberMenu) {
             case 1:
-                addElement();
+                addBus();
                 break;
             case 2:
                 break;
@@ -27,21 +31,55 @@ public class BusHandler extends Handler {
         }
     }
 
-    public void addElement() {
+    private void addBus() {
+        System.out.println("Выберите способ добавления автобуса:");
+        System.out.println("1 > Ввести вручную");
+        System.out.println("2 > Загрузить из файла");
+        System.out.println("3 > Генерация случайных данных");
+
         Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
 
-        System.out.println("Введите номер автобуса: ");
-        String number = scanner.nextLine();
+        switch (choice) {
+            case 1:
+                ManualLoader<Bus> busManualLoader = new ManualLoader<>();
+                busManualLoader.loadManual(Bus.class);
+                break;
+            case 2:
+                System.out.println("Введите количество автобусов для загрузки из файла:");
+                int numberToLoad = scanner.nextInt();
 
-        System.out.println("Введите модель автобуса: ");
-        String modelBus = scanner.nextLine();
+                FileLoader<Bus> busFileLoader = new FileLoader<>();
+                busFileLoader.read(Bus.class, numberToLoad);
+                break;
+            case 3:
+                System.out.println("Введите количество автобусов для генерации:");
+                int numberToGenerate = scanner.nextInt();
 
-        System.out.println("Введите количество пройденных миль: ");
-        int mileage = scanner.nextInt();
-
-        //Bus bus = new Bus(number, modelBus, mileage);
-
-        //model.addBus(bus);
+                RandomLoader<Bus> busRandomLoader = new RandomLoader<>();
+                busRandomLoader.loadRandom(numberToGenerate, Bus.class);
+                break;
+            default:
+                System.out.println("Неверный выбор.");
+                break;
+        }
     }
 
+    private void deleteBus() {
+        //todo логика удаления автобуса
+        System.out.println("Удаление автобуса...");
+    }
+
+    private void findBus() {
+        //todo логика поиска автобуса
+        System.out.println("Поиск автобуса...");
+    }
 }
+/*
+
+        // Привязываем команды к действиям
+/*        menuMap.put(1, this::addBus);
+        menuMap.put(2, this::deleteBus);
+        menuMap.put(3, this::findBus);
+        menuMap.put(4, () -> System.out.println("Возвращение в главное меню"));
+    }*/
