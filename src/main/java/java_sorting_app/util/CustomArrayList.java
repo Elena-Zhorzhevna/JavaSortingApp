@@ -1,6 +1,8 @@
 package java_sorting_app.util;
 
-public class CustomArrayList <T> {
+import java.io.Serializable;
+
+public class CustomArrayList<T> implements Serializable {
     //массив для листа
     private Object[] objects;
 
@@ -45,6 +47,7 @@ public class CustomArrayList <T> {
         System.arraycopy(objects, 0, newArray, 0, size);
         objects = newArray;
     }
+
     //проврека индекса, входит ли он в диапазон
     private void checkIndex(int index) {
         if (index < 0 || index >= objects.length) {
@@ -68,6 +71,4 @@ public class CustomArrayList <T> {
 
         return oldValue;
     }
-
-
 }

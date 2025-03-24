@@ -1,6 +1,8 @@
 package java_sorting_app.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String name;
     private String password;
     private String email;
@@ -9,9 +11,6 @@ public class User {
         this.name = name;
         this.password = password;
         this.email = email;
-    }
-
-    public User() {
     }
 
     public String getName() {
@@ -35,15 +34,17 @@ public class User {
                 '}';
     }
 
+    public static UserBuilder create() {
+        return new UserBuilder();
+    }
+
+    // Статический вложенный класс UserBuilder для паттерна "Строитель"
     public static class UserBuilder {
         private String name;
         private String password;
         private String email;
 
-        public static UserBuilder create() {
-            return new UserBuilder();
-        }
-
+        // Методы для установки значений
         public UserBuilder withName(String name) {
             this.name = name;
             return this;
@@ -59,6 +60,7 @@ public class User {
             return this;
         }
 
+        // Метод для создания объекта User
         public User build() {
             return new User(name, password, email);
         }
