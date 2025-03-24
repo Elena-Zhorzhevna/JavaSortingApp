@@ -1,3 +1,5 @@
+package java_sorting_app.util;
+
 import java.util.Comparator;
 
 public class CustomInsertionSort {

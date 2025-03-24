@@ -1,24 +1,16 @@
 package java_sorting_app.handlers;
 
 import java_sorting_app.model.Model;
-import java_sorting_app.view.Menu;
-
-import java.util.HashMap;
-import java.util.Map;
+import java_sorting_app.menu.MenuController;
 
 public abstract class Handler {
 
-    protected Map<Integer, Handler> menuMap;
-
     protected static Model model;
 
-    protected Menu menu;
+    protected MenuController menuController;
 
-    public Handler(Handler parentHandler, Menu menu) {
-        this.menu = menu;
-
-        menuMap = new HashMap<Integer, Handler>();
-        menuMap.put(0, parentHandler);
+    public Handler(String title) {
+        menuController = new MenuController(title);
     }
 
     public static void setModel(Model model) {
@@ -26,7 +18,7 @@ public abstract class Handler {
     }
 
     public String getMenu(){
-        return menu.getMenuItems();
+        return menuController.buildMenu();
     }
 
     public Handler process(int numberMenu) {
@@ -42,17 +34,17 @@ public abstract class Handler {
     protected abstract void handle(int numberMenu);
 
     protected Handler getItemHandler(int numberMenu) {
-        if (!menuMap.containsKey(numberMenu)) {
+        if (!menuController.containsItem(numberMenu)) {
             return this;
         }
-        return menuMap.get(numberMenu);
+        return menuController.getHandler(numberMenu);
     }
 
     public String getPWD(){
-        Handler parentHandler = menuMap.get(0);
+        Handler parentHandler = menuController.getHandler(0);
         if(parentHandler != null){
-            return parentHandler.getPWD() + "/" + menu.getMenuTitle();
+            return parentHandler.getPWD() + "/" + menuController.getTitle();
         }
-        return "/" + menu.getMenuTitle();
+        return "/" + menuController.getTitle();
     }
 }

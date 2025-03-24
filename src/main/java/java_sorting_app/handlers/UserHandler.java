@@ -1,14 +1,13 @@
 package java_sorting_app.handlers;
 
-import java_sorting_app.view.UserMenu;
-
 public class UserHandler extends Handler {
     public UserHandler(Handler handler) {
-        super(handler, new UserMenu());
-        menuMap.put(1, this);
-        menuMap.put(2, this);
-        menuMap.put(3, this);
-        menuMap.put(4, this);
+        super("Меню работы с пользователями");
+        menuController.addItem(1, "Добавить пользователя", this);
+        menuController.addItem(2, "Удалить пользователя", this);
+        menuController.addItem(3, "Найти пользователя", this);
+        menuController.addItem(4, "Где я?", this);
+        menuController.addItem(0, "Назад", handler);
     }
 
     @Override

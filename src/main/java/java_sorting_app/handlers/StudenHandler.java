@@ -1,14 +1,13 @@
 package java_sorting_app.handlers;
 
-import java_sorting_app.view.StudentMenu;
-
 public class StudenHandler extends Handler {
     public StudenHandler(Handler handler) {
-        super(handler, new StudentMenu());
-        menuMap.put(1, this);
-        menuMap.put(2, this);
-        menuMap.put(3, this);
-        menuMap.put(4, this);
+        super("Меню работы со студентами");
+        menuController.addItem(1, "Добавить студента", this);
+        menuController.addItem(2, "Удалить студента", this);
+        menuController.addItem(3, "Найти студента", this);
+        menuController.addItem(4, "Где я?", this);
+        menuController.addItem(0, "Назад", handler);
     }
 
     @Override

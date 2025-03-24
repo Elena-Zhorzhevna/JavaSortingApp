@@ -1,18 +1,16 @@
 package java_sorting_app.handlers;
 
-import java_sorting_app.model.Bus;
-import java_sorting_app.view.BusMenu;
-
 import java.util.Scanner;
 
 public class BusHandler extends Handler {
 
     public BusHandler(Handler handler) {
-        super(handler, new BusMenu());
-        menuMap.put(1, this);
-        menuMap.put(2, this);
-        menuMap.put(3, this);
-        menuMap.put(4, this);
+        super("Меню работы с автобусами");
+        menuController.addItem(1, "Добавить автобус", this);
+        menuController.addItem(2, "Удалить автобус", this);
+        menuController.addItem(3, "Найти автобус", this);
+        menuController.addItem(4, "Где я?", this);
+        menuController.addItem(0, "Назад", handler);
     }
 
     @Override
