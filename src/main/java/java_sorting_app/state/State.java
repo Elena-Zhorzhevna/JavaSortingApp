@@ -1,16 +1,9 @@
 package java_sorting_app.state;
 
 import java_sorting_app.handlers.Handler;
-import java_sorting_app.model.Model;
 
 
 public class State {
-    private static Model model;
-
-    static {
-        model = new Model();
-        Handler.setModel(model);
-    }
 
     public State(Handler handler) {
         this.handler = handler;

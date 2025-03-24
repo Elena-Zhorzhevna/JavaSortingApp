@@ -1,22 +1,22 @@
 package java_sorting_app.handlers;
 
+import java_sorting_app.dao.DAOModel;
 import java_sorting_app.loaders.FileLoader;
-import java_sorting_app.loaders.ManualLoader;
 import java_sorting_app.loaders.RandomLoader;
 import java_sorting_app.model.Bus;
 
 import java.util.Scanner;
 
-public class AddBusHandler extends Handler {
+public class AddHandler<T> extends Handler<T> {
 
-    public AddBusHandler(Handler handler) {
-        super("Меню добавления автобусов");
+    public AddHandler(Handler handler) {
+        super("Меню добавления элементов", handler);
         menuController.addItem(1, "Ввести вручную", this);
         menuController.addItem(2, "Загрузить из файла", this);
         menuController.addItem(3, "Генерация случайных данных", this);
         menuController.addItem(4, "Где я?", this);
         menuController.addItem(0, "⮌ Назад", handler);
-        menuController.setAnnotation("Выберите способ добавления автобуса:");
+        menuController.setAnnotation("Выберите способ добавления:");
     }
 
     @Override
@@ -24,8 +24,7 @@ public class AddBusHandler extends Handler {
         Scanner scanner = new Scanner(System.in);
         switch (numberMenu) {
             case 1:
-                ManualLoader<Bus> busManualLoader = new ManualLoader<>();
-                busManualLoader.loadManual(Bus.class);
+                getDAOModel().loadManual();
                 break;
             case 2:
                 System.out.println("Введите количество автобусов для загрузки из файла:");

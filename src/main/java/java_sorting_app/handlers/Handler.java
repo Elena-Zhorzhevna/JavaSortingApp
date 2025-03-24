@@ -1,27 +1,31 @@
 package java_sorting_app.handlers;
-import java_sorting_app.model.Model;
+import java_sorting_app.dao.DAOModel;
 import java_sorting_app.menu.MenuController;
+import java_sorting_app.model.Bus;
 
 
-public abstract class Handler {
+public abstract class Handler<T> {
 
-    protected static Model model;
-
+    protected Handler<T> parentHandler;
     protected MenuController menuController;
     
-    public Handler(String title) {
+    public Handler(String title, Handler<T> parentHandler) {
         menuController = new MenuController(title);
+        this.parentHandler = parentHandler;
     }
 
-    public static void setModel(Model model) {
-        Handler.model = model;
+    protected DAOModel<T> getDAOModel(){
+        if(parentHandler != null){
+            return parentHandler.getDAOModel();
+        }
+        return null;
     }
     
     public String getMenu(){
         return menuController.buildMenu();
     }
 
-    public Handler process(int numberMenu) {
+    public Handler<T> process(int numberMenu) {
         Handler handler = getItemHandler(numberMenu);
 
         if (handler == this) {
@@ -33,7 +37,7 @@ public abstract class Handler {
 
     protected abstract void handle(int numberMenu);
 
-    protected Handler getItemHandler(int numberMenu) {
+    protected Handler<T> getItemHandler(int numberMenu) {
         if (!menuController.containsItem(numberMenu)) {
             return this;
         }

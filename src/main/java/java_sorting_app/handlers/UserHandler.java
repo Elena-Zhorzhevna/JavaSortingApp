@@ -1,13 +1,26 @@
 package java_sorting_app.handlers;
 
-public class UserHandler extends Handler {
-    public UserHandler(Handler handler) {
-        super("Меню работы с пользователями");
-        menuController.addItem(1, "Добавить пользователя", new AddUserHandler(this));
+import java_sorting_app.dao.DAOBus;
+import java_sorting_app.dao.DAOModel;
+import java_sorting_app.dao.DAOUser;
+import java_sorting_app.model.User;
+
+public class UserHandler extends Handler<User> {
+    private final DAOModel<User> daoModelUser;
+
+    public UserHandler(Handler<User> handler) {
+        super("Меню работы с пользователями", handler);
+        daoModelUser = new DAOUser();
+        menuController.addItem(1, "Добавить пользователя", new AddHandler<User>(this));
         menuController.addItem(2, "Удалить пользователя", this);
         menuController.addItem(3, "Найти пользователя", this);
         menuController.addItem(4, "Где я?", this);
         menuController.addItem(0, "⮌ Назад", handler);
+    }
+
+    @Override
+    protected DAOModel<User> getDAOModel() {
+        return daoModelUser;
     }
 
     @Override

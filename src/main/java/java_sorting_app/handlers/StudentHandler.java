@@ -1,13 +1,26 @@
 package java_sorting_app.handlers;
 
-public class StudentHandler extends Handler {
-    public StudentHandler(Handler handler) {
-        super("Меню работы со студентами");
-        menuController.addItem(1, "Добавить студента", new AddStudentHandler(this));
+import java_sorting_app.dao.DAOBus;
+import java_sorting_app.dao.DAOModel;
+import java_sorting_app.dao.DAOStudent;
+import java_sorting_app.model.Student;
+
+public class StudentHandler extends Handler<Student> {
+    private final DAOModel<Student> daoModelStudent;
+
+    public StudentHandler(Handler<Student> handler) {
+        super("Меню работы со студентами", handler);
+        daoModelStudent = new DAOStudent();
+        menuController.addItem(1, "Добавить студента", new AddHandler<Student>(this));
         menuController.addItem(2, "Удалить студента", this);
         menuController.addItem(3, "Найти студента", this);
         menuController.addItem(4, "Где я?", this);
         menuController.addItem(0, "⮌ Назад", handler);
+    }
+
+    @Override
+    protected DAOModel<Student> getDAOModel() {
+        return daoModelStudent;
     }
 
     @Override

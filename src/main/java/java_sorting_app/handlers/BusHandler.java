@@ -1,14 +1,27 @@
 package java_sorting_app.handlers;
 
-public class BusHandler extends Handler {
+import java_sorting_app.dao.DAOBus;
+import java_sorting_app.dao.DAOModel;
+import java_sorting_app.model.Bus;
+import java_sorting_app.util.CustomArrayList;
 
-    public BusHandler(Handler handler) {
-        super("Меню работы с автобусами");
-        menuController.addItem(1, "Добавить автобус", new AddBusHandler(this));
+public class BusHandler extends Handler<Bus> {
+
+    private final DAOModel<Bus> daoModelBus;
+
+    public BusHandler(Handler<Bus> handler) {
+        super("Меню работы с автобусами", handler);
+        daoModelBus = new DAOBus();
+        menuController.addItem(1, "Добавить автобус", new AddHandler<Bus>(this));
         menuController.addItem(2, "Удалить автобус", this);
         menuController.addItem(3, "Найти автобус", this);
         menuController.addItem(4, "Где я?", this);
         menuController.addItem(0, "⮌ Назад", handler);
+    }
+
+    @Override
+    protected DAOModel<Bus> getDAOModel() {
+        return daoModelBus;
     }
 
     @Override

@@ -3,7 +3,7 @@ package java_sorting_app.handlers;
 public class MainHandler extends Handler {
 
     public MainHandler(){
-        super("Главное меню");
+        super("Главное меню", null);
         menuController.addItem(1, "\uD83D\uDDC0 Автобусы", new BusHandler(this));
         menuController.addItem(2, "\uD83D\uDDC0 Студенты", new StudentHandler(this));
         menuController.addItem(3, "\uD83D\uDDC0 Пользователи", new UserHandler(this));
