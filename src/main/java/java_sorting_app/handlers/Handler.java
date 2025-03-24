@@ -1,10 +1,10 @@
 package java_sorting_app.handlers;
-
 import java_sorting_app.model.Model;
 import java_sorting_app.view.Menu;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 public abstract class Handler {
 
@@ -16,7 +16,6 @@ public abstract class Handler {
 
     public Handler(Handler parentHandler, Menu menu) {
         this.menu = menu;
-
         menuMap = new HashMap<Integer, Handler>();
         menuMap.put(0, parentHandler);
     }
@@ -25,7 +24,7 @@ public abstract class Handler {
         Handler.model = model;
     }
 
-    public String getMenu(){
+    public String getMenu() {
         return menu.getMenuItems();
     }
 
@@ -48,9 +47,9 @@ public abstract class Handler {
         return menuMap.get(numberMenu);
     }
 
-    public String getPWD(){
+    public String getPWD() {
         Handler parentHandler = menuMap.get(0);
-        if(parentHandler != null){
+        if (parentHandler != null) {
             return parentHandler.getPWD() + "/" + menu.getMenuTitle();
         }
         return "/" + menu.getMenuTitle();

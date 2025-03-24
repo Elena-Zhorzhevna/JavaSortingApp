@@ -1,17 +1,17 @@
 package java_sorting_app.model;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
     private int groupNumber;
     private double averageGrade;
     private long studentBookNumber;
 
+    // Конструктор с параметрами, который используется в билдере
     private Student(int groupNumber, double averageGrade, long studentBookNumber) {
         this.groupNumber = groupNumber;
         this.averageGrade = averageGrade;
         this.studentBookNumber = studentBookNumber;
-    }
-
-    public Student() {
     }
 
     public int getGroupNumber() {
@@ -35,15 +35,17 @@ public class Student {
                 '}';
     }
 
+    public static StudentBuilder create() {
+        return new StudentBuilder();
+    }
+
+    // Статический вложенный класс StudentBuilder для паттерна "Строитель"
     public static class StudentBuilder {
         private int groupNumber;
         private double averageGrade;
         private long studentBookNumber;
 
-        public static StudentBuilder create() {
-            return new StudentBuilder();
-        }
-
+        // Методы для установки значений
         public StudentBuilder withGroupNumber(int groupNumber) {
             this.groupNumber = groupNumber;
             return this;

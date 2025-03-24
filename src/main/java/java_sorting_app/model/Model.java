@@ -41,5 +41,4 @@ public class Model {
     public void addBus(Bus bus) {
         buses.add(bus);
     }
-
 }
