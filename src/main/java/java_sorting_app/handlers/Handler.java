@@ -1,34 +1,31 @@
 package java_sorting_app.handlers;
-import java_sorting_app.model.Model;
-import java_sorting_app.view.Menu;
-
-import java.util.HashMap;
-import java.util.Map;
+import java_sorting_app.dao.DAOModel;
+import java_sorting_app.menu.MenuController;
+import java_sorting_app.model.Bus;
 
 
-public abstract class Handler {
+public abstract class Handler<T> {
 
-    protected Map<Integer, Handler> menuMap;
-
-    protected static Model model;
-
-    protected Menu menu;
-
-    public Handler(Handler parentHandler, Menu menu) {
-        this.menu = menu;
-        menuMap = new HashMap<Integer, Handler>();
-        menuMap.put(0, parentHandler);
+    protected Handler<T> parentHandler;
+    protected MenuController menuController;
+    
+    public Handler(String title, Handler<T> parentHandler) {
+        menuController = new MenuController(title);
+        this.parentHandler = parentHandler;
     }
 
-    public static void setModel(Model model) {
-        Handler.model = model;
+    protected DAOModel<T> getDAOModel(){
+        if(parentHandler != null){
+            return parentHandler.getDAOModel();
+        }
+        return null;
+    }
+    
+    public String getMenu(){
+        return menuController.buildMenu();
     }
 
-    public String getMenu() {
-        return menu.getMenuItems();
-    }
-
-    public Handler process(int numberMenu) {
+    public Handler<T> process(int numberMenu) {
         Handler handler = getItemHandler(numberMenu);
 
         if (handler == this) {
@@ -40,18 +37,18 @@ public abstract class Handler {
 
     protected abstract void handle(int numberMenu);
 
-    protected Handler getItemHandler(int numberMenu) {
-        if (!menuMap.containsKey(numberMenu)) {
+    protected Handler<T> getItemHandler(int numberMenu) {
+        if (!menuController.containsItem(numberMenu)) {
             return this;
         }
-        return menuMap.get(numberMenu);
+        return menuController.getHandler(numberMenu);
     }
-
-    public String getPWD() {
-        Handler parentHandler = menuMap.get(0);
-        if (parentHandler != null) {
-            return parentHandler.getPWD() + "/" + menu.getMenuTitle();
+    
+    public String getPWD(){
+        Handler parentHandler = menuController.getHandler(0);
+        if(parentHandler != null){
+            return parentHandler.getPWD() + "/" + menuController.getTitle();
         }
-        return "/" + menu.getMenuTitle();
+        return "/" + menuController.getTitle();
     }
 }

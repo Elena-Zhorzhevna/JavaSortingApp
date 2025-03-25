@@ -1,29 +1,33 @@
 package java_sorting_app.handlers;
 
-import java_sorting_app.loaders.FileLoader;
-import java_sorting_app.loaders.ManualLoader;
-import java_sorting_app.loaders.RandomLoader;
+import java_sorting_app.dao.DAOBus;
+import java_sorting_app.dao.DAOModel;
 import java_sorting_app.model.Bus;
-import java_sorting_app.view.BusMenu;
+import java_sorting_app.util.CustomArrayList;
 
-import java.util.Random;
-import java.util.Scanner;
+public class BusHandler extends Handler<Bus> {
 
-public class BusHandler extends Handler {
+    private final DAOModel<Bus> daoModelBus;
 
-    public BusHandler(Handler handler) {
-        super(handler, new BusMenu());
-        menuMap.put(1, this);
-        menuMap.put(2, this);
-        menuMap.put(3, this);
-        menuMap.put(4, this);
+    public BusHandler(Handler<Bus> handler) {
+        super("Меню работы с автобусами", handler);
+        daoModelBus = new DAOBus();
+        menuController.addItem(1, "Добавить автобус", new AddHandler<Bus>(this));
+        menuController.addItem(2, "Удалить автобус", this);
+        menuController.addItem(3, "Найти автобус", this);
+        menuController.addItem(4, "Где я?", this);
+        menuController.addItem(0, "⮌ Назад", handler);
+    }
+
+    @Override
+    protected DAOModel<Bus> getDAOModel() {
+        return daoModelBus;
     }
 
     @Override
     protected void handle(int numberMenu) {
         switch (numberMenu) {
             case 1:
-                addBus();
                 break;
             case 2:
                 break;
@@ -33,39 +37,7 @@ public class BusHandler extends Handler {
         }
     }
 
-    private void addBus() {
-        System.out.println("Выберите способ добавления автобуса:");
-        System.out.println("1 > Ввести вручную");
-        System.out.println("2 > Загрузить из файла");
-        System.out.println("3 > Генерация случайных данных");
 
-        Scanner scanner = new Scanner(System.in);
-        int choice = scanner.nextInt();
-
-        switch (choice) {
-            case 1:
-                ManualLoader<Bus> busManualLoader = new ManualLoader<>();
-                busManualLoader.loadManual(Bus.class);
-                break;
-            case 2:
-                System.out.println("Введите количество автобусов для загрузки из файла:");
-                int numberToLoad = scanner.nextInt();
-
-                FileLoader<Bus> busFileLoader = new FileLoader<>();
-                busFileLoader.read(Bus.class, numberToLoad);
-                break;
-            case 3:
-                System.out.println("Введите количество автобусов для генерации:");
-                int numberToGenerate = scanner.nextInt();
-
-                RandomLoader<Bus> busRandomLoader = new RandomLoader<>();
-                busRandomLoader.loadRandom(numberToGenerate, Bus.class);
-                break;
-            default:
-                System.out.println("Неверный выбор.");
-                break;
-        }
-    }
 
     private void deleteBus() {
         //todo логика удаления автобуса

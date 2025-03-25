@@ -1,15 +1,14 @@
 package java_sorting_app.handlers;
 
-
-import java_sorting_app.view.MainMenu;
-
 public class MainHandler extends Handler {
 
     public MainHandler(){
-        super(null, new MainMenu());
-        menuMap.put(1, new BusHandler(this));
-        menuMap.put(2, new StudentHandler(this));
-        menuMap.put(3, new UserHandler(this));
+        super("Главное меню", null);
+        menuController.addItem(1, "\uD83D\uDDC0 Автобусы", new BusHandler(this));
+        menuController.addItem(2, "\uD83D\uDDC0 Студенты", new StudentHandler(this));
+        menuController.addItem(3, "\uD83D\uDDC0 Пользователи", new UserHandler(this));
+        menuController.addItem(0, "⮤ Выход", null);
+        menuController.setAnnotation("Выберите коллекцию для работы:");
     }
 
     @Override

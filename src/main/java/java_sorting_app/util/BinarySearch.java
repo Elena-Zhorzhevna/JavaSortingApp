@@ -1,5 +1,8 @@
+package java_sorting_app.util;
+
 import java.util.Comparator;
 import java.util.List;
+
 public class BinarySearch {
     public static <T extends Comparable<? super T>> int search(List<T> xs, T x) {
         return search(xs, x, T::compareTo);
