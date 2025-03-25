@@ -1,11 +1,5 @@
 package java_sorting_app.handlers;
 
-import java_sorting_app.dao.DAOModel;
-import java_sorting_app.loaders.FileLoader;
-import java_sorting_app.loaders.RandomLoader;
-import java_sorting_app.model.Bus;
-
-import java.util.Scanner;
 
 public class AddHandler<T> extends Handler<T> {
 
@@ -21,29 +15,19 @@ public class AddHandler<T> extends Handler<T> {
 
     @Override
     protected void handle(int numberMenu) {
-        Scanner scanner = new Scanner(System.in);
         switch (numberMenu) {
             case 1:
                 getDAOModel().loadManual();
                 break;
             case 2:
-                System.out.println("Введите количество автобусов для загрузки из файла:");
-                int numberToLoad = scanner.nextInt();
-
-                FileLoader<Bus> busFileLoader = new FileLoader<>();
-                busFileLoader.read(Bus.class, numberToLoad);
+                getDAOModel().loadFromFile();
                 break;
             case 3:
-                System.out.println("Введите количество автобусов для генерации:");
-                int numberToGenerate = scanner.nextInt();
-
-                RandomLoader<Bus> busRandomLoader = new RandomLoader<>();
-                busRandomLoader.loadRandom(numberToGenerate, Bus.class);
+                getDAOModel().loadRandom();
                 break;
             case 4:
                 System.out.println(getPWD());
                 break;
         }
     }
-
 }
