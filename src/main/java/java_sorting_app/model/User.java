@@ -1,8 +1,10 @@
 package java_sorting_app.model;
 
-import java.io.Serializable;
+import java_sorting_app.validator.DataValidator;
 
-public class User implements Serializable {
+import java.util.Optional;
+
+public class User implements SerializableToCSVString {
     private String name;
     private String password;
     private String email;
@@ -64,5 +66,59 @@ public class User implements Serializable {
         public User build() {
             return new User(name, password, email);
         }
+    }
+
+    public static Optional<User> fromCSVString(String stringObjectCSV) {
+
+        String[] userData = stringObjectCSV.split(";");
+        if (userData.length != 3) {
+            System.err.println("Ошибка в данных - строка не соответствует формату.");
+            return Optional.empty();
+        }
+
+        User.UserBuilder userBuilder = User.create();
+
+        if (DataValidator.isValidUserName(userData[0])) {
+            userBuilder.withName(userData[0]);
+        }
+        else {
+            System.err.println("У пользователя обязательно должно быть имя");
+            return Optional.empty();
+        }
+
+        if (DataValidator.isValidEmail(userData[1])) {
+            userBuilder.withEmail(userData[1]);
+        }
+        else {
+            System.err.println("Некорректный email пользователя");
+        }
+
+        if (DataValidator.isValidPassword(userData[2])) {
+            userBuilder.withPassword(userData[2]);
+        }
+        else {
+            System.out.println("Некорректный пароль.\n" +
+                    "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
+                    "Заглавную латинскую букву (A-Z)\n" +
+                    "Строчную латинскую букву (a-z)\n" +
+                    "Цифру\n" +
+                    "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.");
+        }
+
+        User user = userBuilder.build();
+
+        return Optional.of(user);
+    }
+
+    @Override
+    public String toCSVString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(name)
+                .append(";")
+                .append(password)
+                .append(";")
+                .append(email);
+
+        return stringBuilder.toString();
     }
 }

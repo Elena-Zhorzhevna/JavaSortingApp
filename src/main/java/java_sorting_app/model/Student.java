@@ -1,8 +1,12 @@
 package java_sorting_app.model;
 
-import java.io.Serializable;
+import java_sorting_app.validator.DataValidator;
 
-public class Student implements Serializable {
+import java.io.Serializable;
+import java.util.InputMismatchException;
+import java.util.Optional;
+
+public class Student implements SerializableToCSVString {
     private int groupNumber;
     private double averageGrade;
     private long studentBookNumber;
@@ -64,5 +68,51 @@ public class Student implements Serializable {
         public Student build() {
             return new Student(groupNumber, averageGrade, studentBookNumber);
         }
+    }
+
+    public static Optional<Student> fromCSVString(String stringObjectCSV) {
+        String[] studentData = stringObjectCSV.split(";");
+        if (studentData.length != 3) {
+            System.err.println("Ошибка в данных файла: строка не соответствует формату.");
+            return Optional.empty();
+        }
+
+        StudentBuilder studentBuilder = Student.create();
+
+        if(DataValidator.isValidGroupNumber(studentData[0])) {
+            studentBuilder.withStudentBookNumber(Long.parseLong(studentData[0]));
+        }
+        else {
+            System.out.println("Некорректный номер группы.");
+        }
+
+        if(DataValidator.isValidAverageGrade(studentData[1])) {
+            studentBuilder.withAverageGrade(Double.parseDouble(studentData[1]));
+        }
+        else {
+            System.out.println("Некорректный средний балл");
+        }
+
+        if(DataValidator.isValidStudentBookNumber(studentData[2])) {
+            studentBuilder.withStudentBookNumber(Long.parseLong(studentData[2]));
+        }
+        else {
+            System.out.println("Некорректный номер студенческого билета");
+        }
+
+        Student student = studentBuilder.build();
+        return Optional.of(student);
+    }
+
+    @Override
+    public String toCSVString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(groupNumber)
+                .append(";")
+                .append(averageGrade)
+                .append(";")
+                .append(studentBookNumber);
+
+        return stringBuilder.toString();
     }
 }
