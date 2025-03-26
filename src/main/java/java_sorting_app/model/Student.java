@@ -3,10 +3,11 @@ package java_sorting_app.model;
 import java_sorting_app.validator.DataValidator;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Optional;
 
-public class Student implements SerializableToCSVString {
+public class Student implements Comparable<Student>, SerializableToCSVString {
     private int groupNumber;
     private double averageGrade;
     private long studentBookNumber;
@@ -37,6 +38,14 @@ public class Student implements SerializableToCSVString {
                 ", averageGrade=" + averageGrade +
                 ", studentBookNumber=" + studentBookNumber +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Student o){
+        return Comparator.comparing(Student::getGroupNumber)
+                .thenComparing(Student::getStudentBookNumber)
+                .thenComparing(Student::getAverageGrade)
+                .compare(this, o);
     }
 
     public static StudentBuilder create() {
