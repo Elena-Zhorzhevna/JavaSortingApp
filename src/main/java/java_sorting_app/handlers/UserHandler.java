@@ -5,56 +5,38 @@ import java_sorting_app.dao.DAOModel;
 import java_sorting_app.dao.DAOUser;
 import java_sorting_app.model.User;
 
-public class UserHandler extends Handler<User> {
-    private final DAOModel<User> daoModelUser;
+public class UserHandler extends Handler {
+    private final DAOModel daoModelUser;
 
-    public UserHandler(Handler<User> handler) {
+    public UserHandler(Handler handler) {
         super("Меню работы с пользователями", handler);
         daoModelUser = new DAOUser();
-        menuController.addItem(1, "Добавить пользователя", new AddHandler<User>(this));
-        menuController.addItem(2, "Удалить пользователя", this);
-        menuController.addItem(3, "Найти пользователя", this);
-        menuController.addItem(4, "Где я?", this);
-        menuController.addItem(0, "⮌ Назад", handler);
+        Handler addUserHandler = new AddHandler(this);
+        menuController.addItem(1, "Добавить пользователя", addUserHandler::getHandler);
+        menuController.addItem(2, "Удалить пользователя", this::deleteUser);
+        menuController.addItem(3, "Найти пользователя", this::searchUser);
+        menuController.addItem(0, "⮌ Назад", handler::getHandler);
     }
 
     @Override
-    protected DAOModel<User> getDAOModel() {
+    protected DAOModel getDAOModel() {
         return daoModelUser;
     }
 
-    @Override
-    public void handle(int numberMenu) {
-        switch (numberMenu) {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                System.out.println(getPWD());
-                break;
-        }
+    private Handler deleteUser() {
+        System.out.println("Удаление пользователя...");
+        return this;
     }
 
+    private Handler listUsers() {
+        System.out.println("Список пользователей...");
+        return this;
+    }
+
+    private Handler searchUser() {
+        System.out.println("Поиск пользователя...");
+        return this;
+    }
 
 }
 
-
-/*
-
-    private void deleteUser() {
-        // Логика
-        System.out.println("Удаление пользователя...");
-    }
-
-    private void listUsers() {
-        // Логика
-        System.out.println("Список пользователей...");
-    }
-
-    private void searchUser() {
-        // Логика
-        System.out.println("Поиск пользователя...");
-    }*/

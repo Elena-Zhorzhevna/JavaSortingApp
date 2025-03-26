@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
-public class DAOUser implements DAOModel<User> {
+public class DAOUser implements DAOModel {
 
     CustomArrayList<User> users;
 
@@ -15,19 +15,16 @@ public class DAOUser implements DAOModel<User> {
         users = new CustomArrayList<>();
     }
 
-    @Override
     public void add(User element) {
         users.add(element);
     }
 
-    @Override
     public void addAll(CustomArrayList<User> elements) {
         for (int i = 0; i < elements.size(); i++) {
             users.add(elements.get(i));
         }
     }
 
-    @Override
     public CustomArrayList<User> getElements() {
         return users;
     }
@@ -38,7 +35,7 @@ public class DAOUser implements DAOModel<User> {
     }
 
     @Override
-    public int findElement(User element) {
+    public int findElement() {
         return -1;
     }
 

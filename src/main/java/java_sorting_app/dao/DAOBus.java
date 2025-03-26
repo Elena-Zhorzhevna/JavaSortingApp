@@ -1,13 +1,14 @@
 package java_sorting_app.dao;
 
 import java_sorting_app.model.Bus;
+import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
 
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
-public class DAOBus implements DAOModel<Bus> {
+public class DAOBus implements DAOModel {
 
     private CustomArrayList<Bus> buses;
 
@@ -15,38 +16,43 @@ public class DAOBus implements DAOModel<Bus> {
         buses = new CustomArrayList<>();
     }
 
-    @Override
+
     public void add(Bus element) {
         buses.add(element);
     }
 
-    @Override
+
     public void addAll(CustomArrayList<Bus> elements) {
         for(int index = 0; index < elements.size(); index++) {
             buses.add(elements.get(index));
         }
     }
 
-    @Override
+
     public CustomArrayList<Bus> getElements() {
         return buses;
     }
 
     @Override
-    public int findElement(Bus element) {
-        int index = 0;
-        //index = BinarySearch.search(buses, element);
-        if(index >= 0){
-            System.out.println("Найден автобус: " + buses.get(index));
-            System.out.println("Сохранить найденный автобус в файл? (y/n)");
-            Scanner scanner = new Scanner(System.in);
-            if(scanner.next().toLowerCase().equals("y")){
-                saveToFile(buses.get(index), "busesFinded.csv");
+    public int findElement() {
+        Optional<Bus> busOptional = Bus.fromCSVString("");
+        if(busOptional.isPresent()) {
+            Bus bus = busOptional.get();
+            int index = 0;
+            index = BinarySearch.search(buses, bus);
+            if(index >= 0){
+                System.out.println("Найден автобус: " + buses.get(index));
+                System.out.println("Сохранить найденный автобус в файл? (y/n)");
+                Scanner scanner = new Scanner(System.in);
+                if(scanner.next().toLowerCase().equals("y")){
+                    saveToFile(buses.get(index), "busesFinded.csv");
+                }
+            }
+            else {
+                System.out.println("Автобус не найден :(");
             }
         }
-        else {
-            System.out.println("Автобус не найден :(");
-        }
+
         return -1;
     }
 

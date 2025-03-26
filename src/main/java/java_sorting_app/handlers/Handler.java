@@ -4,51 +4,38 @@ import java_sorting_app.menu.MenuController;
 import java_sorting_app.model.Bus;
 
 
-public abstract class Handler<T> {
+public abstract class Handler {
 
-    protected Handler<T> parentHandler;
+    protected Handler parentHandler;
     protected MenuController menuController;
     
-    public Handler(String title, Handler<T> parentHandler) {
+    public Handler(String title, Handler parentHandler) {
         menuController = new MenuController(title);
         this.parentHandler = parentHandler;
     }
 
-    protected DAOModel<T> getDAOModel(){
+    protected DAOModel getDAOModel(){
         if(parentHandler != null){
             return parentHandler.getDAOModel();
         }
         return null;
+    }
+
+    public Handler getHandler(){
+        return this;
     }
     
     public String getMenu(){
         return menuController.buildMenu();
     }
 
-    public Handler<T> process(int numberMenu) {
-        Handler handler = getItemHandler(numberMenu);
-
-        if (handler == this) {
-            handle(numberMenu);
-        }
-
-        return handler;
-    }
-
-    protected abstract void handle(int numberMenu);
-
-    protected Handler<T> getItemHandler(int numberMenu) {
+    public Handler process(int numberMenu) {
         if (!menuController.containsItem(numberMenu)) {
+            System.out.println("Menu doesn't exist");
             return this;
         }
-        return menuController.getHandler(numberMenu);
+        IProcessor<Handler> handler = menuController.getHandler(numberMenu);
+        return handler.process();
     }
-    
-    public String getPWD(){
-        Handler parentHandler = menuController.getHandler(0);
-        if(parentHandler != null){
-            return parentHandler.getPWD() + "/" + menuController.getTitle();
-        }
-        return "/" + menuController.getTitle();
-    }
+
 }

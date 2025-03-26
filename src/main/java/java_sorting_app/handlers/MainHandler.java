@@ -4,22 +4,22 @@ public class MainHandler extends Handler {
 
     public MainHandler(){
         super("Главное меню", null);
-        menuController.addItem(1, "\uD83D\uDDC0 Автобусы", new BusHandler(this));
-        menuController.addItem(2, "\uD83D\uDDC0 Студенты", new StudentHandler(this));
-        menuController.addItem(3, "\uD83D\uDDC0 Пользователи", new UserHandler(this));
-        menuController.addItem(0, "⮤ Выход", null);
+
+        Handler busHandler = new BusHandler(this);
+        Handler studentHandler = new StudentHandler(this);
+        Handler userHandler = new UserHandler(this);
+
+        menuController.addItem(1, "\uD83D\uDDC0 Автобусы", busHandler::getHandler);
+        menuController.addItem(2, "\uD83D\uDDC0 Студенты", studentHandler::getHandler);
+        menuController.addItem(3, "\uD83D\uDDC0 Пользователи", userHandler::getHandler);
+        menuController.addItem(0, "⮤ Выход", this::exit);
         menuController.setAnnotation("Выберите коллекцию для работы:");
     }
 
-    @Override
-    protected void handle(int numberMenu){
-        System.out.println("Вы в главном меню");
+    public Handler exit(){
+        return parentHandler;
     }
 
-    @Override
-    public Handler process(int numberMenu) {
-        return getItemHandler(numberMenu);
-    }
 }
 
 

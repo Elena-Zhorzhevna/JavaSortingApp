@@ -9,19 +9,13 @@ import java.util.Optional;
 import java.util.Random;
 
 
-public interface DAOModel<T> {
-
-    void add(T element);
-
-    void addAll(CustomArrayList<T> elements);
-
-    CustomArrayList<T> getElements();
+public interface DAOModel {
 
     void loadManual();
 
     void sortElements();
 
-    int findElement(T element);
+    int findElement();
 
     void loadFromFile();
 
