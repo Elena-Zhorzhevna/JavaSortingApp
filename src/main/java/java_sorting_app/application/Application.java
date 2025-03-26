@@ -11,7 +11,7 @@ public class Application {
         Scanner scanner = new Scanner(System.in);
         State state = new State(new MainHandler());
         int numberOfMenu;
-        do{
+        do {
             System.out.print(state.getMenu());
             numberOfMenu = scanner.nextInt();
         }

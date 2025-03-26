@@ -2,73 +2,120 @@ package java_sorting_app.dao;
 
 import java_sorting_app.model.Bus;
 import java_sorting_app.util.CustomArrayList;
-import java_sorting_app.validator.DataValidator;
 
-import java.util.InputMismatchException;
+import java.util.Optional;
+import java.util.Random;
 import java.util.Scanner;
 
-public class DAOBus extends DAOModel<Bus> {
+public class DAOBus implements DAOModel<Bus> {
+
+    private CustomArrayList<Bus> buses;
+
+    public DAOBus() {
+        buses = new CustomArrayList<>();
+    }
 
     @Override
-    public CustomArrayList<Bus> loadManual() {
+    public void add(Bus element) {
+        buses.add(element);
+    }
+
+    @Override
+    public void addAll(CustomArrayList<Bus> elements) {
+        for(int index = 0; index < elements.size(); index++) {
+            buses.add(elements.get(index));
+        }
+    }
+
+    @Override
+    public CustomArrayList<Bus> getElements() {
+        return buses;
+    }
+
+    @Override
+    public int findElement(Bus element) {
+        int index = 0;
+        //index = BinarySearch.search(buses, element);
+        if(index >= 0){
+            System.out.println("Найден автобус: " + buses.get(index));
+            System.out.println("Сохранить найденный автобус в файл? (y/n)");
+            Scanner scanner = new Scanner(System.in);
+            if(scanner.next().toLowerCase().equals("y")){
+                saveToFile(buses.get(index), "busesFinded.csv");
+            }
+        }
+        else {
+            System.out.println("Автобус не найден :(");
+        }
+        return -1;
+    }
+
+    @Override
+    public void sortElements() {
+        //CustomArrayList<Bus> temp = new CustomArrayList<>();
+        //CustomInsertionSort.selectionSort(buses, );
+    }
+
+    @Override
+    public void loadManual() {
         Scanner scanner = new Scanner(System.in);
-        CustomArrayList<Bus> buses = new CustomArrayList<>();
 
         while (true) {
-            System.out.println("Введите номер автобуса (или 'exit' для завершения): ");
-            String number = scanner.nextLine();
-            if (number.equalsIgnoreCase("exit")) {
+            System.out.println("Введите автобус в формате: номер;модель;пробег");
+            System.out.println("Или введите 'exit' для завершения");
+            System.out.print("? > ");
+
+            String inputLine = scanner.nextLine();
+            if (inputLine.equalsIgnoreCase("exit")) {
                 break;
             }
 
-            while (!DataValidator.isValidBusNumber(number)) {
-                System.out.println("Некорректный номер автобуса. Попробуйте снова: ");
-                number = scanner.nextLine();
-                if (number.equalsIgnoreCase("exit")) {
-                    return buses;
-                }
+            Optional<Bus> busOptional = Bus.fromCSVString(inputLine);
+            busOptional.ifPresent(buses::add);
+            busOptional.ifPresentOrElse(
+                    bus -> System.out.println("Вы добавили автобус: " + bus),
+                    () -> System.out.println("Некорректные данные"));
+        }
+    }
+
+    @Override
+    public void loadFromFile() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите количество автобусов для загрузки из файла:");
+        int numberToLoad = scanner.nextInt();
+
+        Optional<String[]> resultOptional = getRowsFromFile("buses.csv", numberToLoad);
+        if (resultOptional.isPresent()) {
+            String[] rows = resultOptional.get();
+            for (String stringObjectCSV : rows) {
+                Optional<Bus> busOptional = Bus.fromCSVString(stringObjectCSV);
+                busOptional.ifPresent(buses::add);
             }
+        }
+        else {
+            System.out.println("Не удалось загрузить данные из файла");
+        }
+    }
 
-            System.out.println("Введите модель автобуса: ");
-            String model = scanner.nextLine();
-            while (!DataValidator.isValidBusModel(model)) {
-                System.out.println("Некорректная модель автобуса. Попробуйте снова: ");
-                model = scanner.nextLine();
-                if (model.equalsIgnoreCase("exit")) {
-                    return buses;
-                }
-            }
+    @Override
+    public void loadRandom() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Введите количество автобусов для генерации:");
+        int numberToGenerate = scanner.nextInt();
+        Random random = new Random();
 
-            System.out.println("Введите количество пройденных миль: ");
-            int mileage = -1;
+        for (int i = 0; i < numberToGenerate; i++) {
+            String numberBus = generateRandomString(6);
+            String model = generateRandomString(5);
+            int mileage = random.nextInt(99999) + 1;
 
-            while (true) {
-                try {
-                    mileage = scanner.nextInt();
-                    scanner.nextLine();
-
-                    if (!DataValidator.isValidMileage(String.valueOf(mileage))) {
-                        System.out.println("Некорректный пробег. Попробуйте снова: ");
-                    } else {
-                        break;  // Выходим из цикла, если пробег корректен
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Ошибка: введено не число. Попробуйте снова.");
-                    scanner.nextLine();  // Считываем некорректный ввод, чтобы избежать зацикливания
-                }
-                // Если введено -1, выходим из цикла
-                if (mileage == -1) {
-                    return buses;
-                }
-            }
             Bus bus = Bus.create()
-                    .withNumber(number)
+                    .withNumber(numberBus)
                     .withModel(model)
                     .withMileage(mileage)
                     .build();
             buses.add(bus);
         }
-        return buses;
     }
 
 }
