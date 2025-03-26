@@ -13,8 +13,10 @@ public class BusHandler extends Handler{
         daoModelBus = new DAOBus();
         Handler addBusHandler = new AddHandler(this);
         menuController.addItem(1, "Добавить автобус", addBusHandler::getHandler);
-        menuController.addItem(2, "Удалить автобус", this::deleteBus);
+        menuController.addItem(2, "Сортировать коллекцию", this::sortCollection);
         menuController.addItem(3, "Найти автобус", this::findBus);
+        menuController.addItem(4, "Сохранить коллекцию", this::saveToFile);
+        menuController.addItem(5, "Вывести на экран коллекцию", this::printElements);
         menuController.addItem(0, "⮌ Назад", handler::getHandler);
     }
 
@@ -23,16 +25,23 @@ public class BusHandler extends Handler{
         return daoModelBus;
     }
 
-
-    private Handler deleteBus() {
-        //todo логика удаления автобуса
-        System.out.println("Удаление автобуса...");
+    private Handler sortCollection() {
+        getDAOModel().sortElements();
         return this;
     }
 
     private Handler findBus() {
-        //todo логика поиска автобуса
-        System.out.println("Поиск автобуса...");
+        getDAOModel().findElement();
+        return this;
+    }
+
+    private Handler saveToFile() {
+        //getDAOModel().();
+        return this;
+    }
+
+    private Handler printElements(){
+        getDAOModel().printElements();
         return this;
     }
 }

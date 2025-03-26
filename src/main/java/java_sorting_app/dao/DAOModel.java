@@ -11,15 +11,19 @@ import java.util.Random;
 
 public interface DAOModel {
 
+    void printElements();
+
     void loadManual();
 
     void sortElements();
 
-    int findElement();
+    void findElement();
 
     void loadFromFile();
 
     void loadRandom();
+
+    void saveToFile();
 
     default Optional<String[]> getRowsFromFile(String filename, int numberRows) {
         URL url = getClass().getResource("/" + filename);

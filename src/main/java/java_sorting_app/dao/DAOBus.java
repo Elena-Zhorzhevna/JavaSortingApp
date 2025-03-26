@@ -16,6 +16,13 @@ public class DAOBus implements DAOModel {
         buses = new CustomArrayList<>();
     }
 
+    @Override
+    public void printElements(){
+        for (int i = 0; i < buses.size(); i++) {
+            Bus bus = buses.get(i);
+            System.out.println(bus);
+        }
+    }
 
     public void add(Bus element) {
         buses.add(element);
@@ -34,7 +41,7 @@ public class DAOBus implements DAOModel {
     }
 
     @Override
-    public int findElement() {
+    public void findElement() {
         Optional<Bus> busOptional = Bus.fromCSVString("");
         if(busOptional.isPresent()) {
             Bus bus = busOptional.get();
@@ -52,14 +59,17 @@ public class DAOBus implements DAOModel {
                 System.out.println("Автобус не найден :(");
             }
         }
-
-        return -1;
     }
 
     @Override
     public void sortElements() {
         //CustomArrayList<Bus> temp = new CustomArrayList<>();
         //CustomInsertionSort.selectionSort(buses, );
+    }
+
+    @Override
+    public void saveToFile(){
+
     }
 
     @Override

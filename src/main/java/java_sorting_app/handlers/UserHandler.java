@@ -13,8 +13,10 @@ public class UserHandler extends Handler {
         daoModelUser = new DAOUser();
         Handler addUserHandler = new AddHandler(this);
         menuController.addItem(1, "Добавить пользователя", addUserHandler::getHandler);
-        menuController.addItem(2, "Удалить пользователя", this::deleteUser);
-        menuController.addItem(3, "Найти пользователя", this::searchUser);
+        menuController.addItem(2, "Сортировать коллекцию", this::sortCollection);
+        menuController.addItem(3, "Найти пользователя", this::findUser);
+        menuController.addItem(4, "Сохранить коллекцию", this::saveToFile);
+        menuController.addItem(5, "Вывести на экран коллекцию", this::printElements);
         menuController.addItem(0, "⮌ Назад", handler::getHandler);
     }
 
@@ -23,18 +25,23 @@ public class UserHandler extends Handler {
         return daoModelUser;
     }
 
-    private Handler deleteUser() {
-        System.out.println("Удаление пользователя...");
+    private Handler sortCollection() {
+        getDAOModel().sortElements();
         return this;
     }
 
-    private Handler listUsers() {
-        System.out.println("Список пользователей...");
+    private Handler findUser() {
+        getDAOModel().findElement();
         return this;
     }
 
-    private Handler searchUser() {
-        System.out.println("Поиск пользователя...");
+    private Handler saveToFile() {
+        //getDAOModel().();
+        return this;
+    }
+
+    private Handler printElements(){
+        getDAOModel().printElements();
         return this;
     }
 

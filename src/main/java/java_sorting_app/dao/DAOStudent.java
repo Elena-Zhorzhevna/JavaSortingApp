@@ -1,5 +1,6 @@
 package java_sorting_app.dao;
 
+import java_sorting_app.model.Bus;
 import java_sorting_app.model.Student;
 import java_sorting_app.util.CustomArrayList;
 import java.util.Optional;
@@ -12,6 +13,14 @@ public class DAOStudent implements DAOModel{
 
     public DAOStudent() {
         students = new CustomArrayList<>();
+    }
+
+    @Override
+    public void printElements(){
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            System.out.println(student);
+        }
     }
 
     public void add(Student element) {
@@ -34,8 +43,13 @@ public class DAOStudent implements DAOModel{
     }
 
     @Override
-    public int findElement() {
-        return -1;
+    public void saveToFile(){
+
+    }
+
+    @Override
+    public void findElement() {
+
     }
 
     @Override

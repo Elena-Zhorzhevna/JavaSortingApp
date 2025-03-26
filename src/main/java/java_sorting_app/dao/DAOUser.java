@@ -1,8 +1,14 @@
 package java_sorting_app.dao;
 
+import java_sorting_app.model.Bus;
+import java_sorting_app.model.Student;
 import java_sorting_app.model.User;
+import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
+import java_sorting_app.util.CustomInsertionSort;
+import java_sorting_app.validator.DataValidator;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -13,6 +19,14 @@ public class DAOUser implements DAOModel {
 
     public DAOUser() {
         users = new CustomArrayList<>();
+    }
+
+    @Override
+    public void printElements(){
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            System.out.println(user);
+        }
     }
 
     public void add(User element) {
@@ -31,12 +45,61 @@ public class DAOUser implements DAOModel {
 
     @Override
     public void sortElements() {
-
+        CustomInsertionSort.selectionSort(users, User::compareTo);
     }
 
     @Override
-    public int findElement() {
-        return -1;
+    public void findElement() {
+        System.out.println("Введите искомые данные пользователя в формате: имя;e-mail");
+        Scanner scanner = new Scanner(System.in);
+        String inputLine = scanner.nextLine();
+
+        String[] elements = inputLine.split(";");
+        if (elements.length != 2) {
+            System.out.println("Введены некорректные данные");
+            System.out.println("Поиск прекращен");
+            return;
+        }
+
+        boolean isValidName = DataValidator.isValidUserName(elements[0]);
+        boolean isValidEmail = DataValidator.isValidEmail(elements[1]);
+
+        Comparator<User> comparator;
+
+        if (isValidName && isValidEmail) {
+            comparator = Comparator.comparing(User::getEmail).thenComparing(User::getName);
+        }
+        else if (isValidName) {
+            comparator = Comparator.comparing(User::getName);
+        }
+        else if (isValidEmail) {
+            comparator = Comparator.comparing(User::getEmail);
+        }
+        else {
+            return;
+        }
+
+        Optional<User> userOptional = User.fromCSVString(inputLine);
+        if(userOptional.isPresent()) {
+            User user = userOptional.get();
+            int index = BinarySearch.search(users, user, comparator);
+            if(index >= 0){
+                System.out.println("Найден пользователь: " + users.get(index));
+                System.out.println("Сохранить найденного пользователя в файл? (y/n)");
+
+                if(scanner.next().equalsIgnoreCase("y")){
+                    saveToFile(users.get(index), "usersFinded.csv");
+                }
+            }
+            else {
+                System.out.println("Пользователь не найден :(");
+            }
+        }
+    }
+
+    @Override
+    public void saveToFile(){
+
     }
 
     @Override

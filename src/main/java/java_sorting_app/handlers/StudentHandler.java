@@ -10,8 +10,10 @@ public class StudentHandler extends Handler {
         daoModelStudent = new DAOStudent();
         Handler addStudentHandler = new AddHandler(this);
         menuController.addItem(1, "Добавить студента", addStudentHandler::getHandler);
-        menuController.addItem(2, "Удалить студента", this::deleteStudent);
-        menuController.addItem(3, "Найти студента", this::searchStudent);
+        menuController.addItem(2, "Сортировать коллекцию", this::sortCollection);
+        menuController.addItem(3, "Найти студента", this::findStudent);
+        menuController.addItem(4, "Сохранить коллекцию", this::saveToFile);
+        menuController.addItem(5, "Вывести на экран коллекцию", this::printElements);
         menuController.addItem(0, "⮌ Назад", handler::getHandler);
     }
 
@@ -20,18 +22,23 @@ public class StudentHandler extends Handler {
         return daoModelStudent;
     }
 
-    private Handler deleteStudent() {
-        System.out.println("Удаление студента...");
+    private Handler sortCollection() {
+        getDAOModel().sortElements();
         return this;
     }
 
-    private Handler searchStudent() {
-        System.out.println("Поиск студента...");
+    private Handler findStudent() {
+        getDAOModel().findElement();
         return this;
     }
 
-    private Handler printStudent() {
-        System.out.println("Печать списка студента...");
+    private Handler saveToFile() {
+        //getDAOModel().();
+        return this;
+    }
+
+    private Handler printElements(){
+        getDAOModel().printElements();
         return this;
     }
 
