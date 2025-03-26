@@ -2,9 +2,7 @@ package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
 
-import java.io.Serializable;
 import java.util.Comparator;
-import java.util.InputMismatchException;
 import java.util.Optional;
 
 public class Student implements Comparable<Student>, SerializableToCSVString {
@@ -41,7 +39,7 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
     }
 
     @Override
-    public int compareTo(Student o){
+    public int compareTo(Student o) {
         return Comparator.comparing(Student::getGroupNumber)
                 .thenComparing(Student::getStudentBookNumber)
                 .thenComparing(Student::getAverageGrade)
@@ -88,26 +86,17 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
 
         StudentBuilder studentBuilder = Student.create();
 
-        if(DataValidator.isValidGroupNumber(studentData[0])) {
-            studentBuilder.withStudentBookNumber(Long.parseLong(studentData[0]));
-        }
-        else {
-            System.out.println("Некорректный номер группы.");
-        }
+        Optional<Integer> groupNumberOptional = DataValidator.validateAndReturnGroupNumber(studentData[0]);
+        groupNumberOptional.ifPresentOrElse(studentBuilder::withGroupNumber,
+                () -> System.err.println("Некорректный номер группы."));
 
-        if(DataValidator.isValidAverageGrade(studentData[1])) {
-            studentBuilder.withAverageGrade(Double.parseDouble(studentData[1]));
-        }
-        else {
-            System.out.println("Некорректный средний балл");
-        }
+        Optional<Double> averageGradeOptional = DataValidator.validateAndReturnAverageGrade(studentData[1]);
+        averageGradeOptional.ifPresentOrElse(studentBuilder::withAverageGrade,
+                () -> System.err.println("Некорректный средний балл."));
 
-        if(DataValidator.isValidStudentBookNumber(studentData[2])) {
-            studentBuilder.withStudentBookNumber(Long.parseLong(studentData[2]));
-        }
-        else {
-            System.out.println("Некорректный номер студенческого билета");
-        }
+        Optional<Long> studentBookNumberOptional = DataValidator.validateAndReturnStudentBookNumber(studentData[2]);
+        studentBookNumberOptional.ifPresentOrElse(studentBuilder::withStudentBookNumber,
+                () -> System.err.println("Некорректный номер студенческого билета."));
 
         Student student = studentBuilder.build();
         return Optional.of(student);

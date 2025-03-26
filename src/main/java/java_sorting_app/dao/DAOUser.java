@@ -74,11 +74,17 @@ public class DAOUser implements DAOModel<User> {
         if (resultOptional.isPresent()) {
             String[] rows = resultOptional.get();
             for (String stringObjectCSV : rows) {
-                Optional<User> userOptional = User.fromCSVString(stringObjectCSV);
-                userOptional.ifPresent(users::add);
+                if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
+                    Optional<User> userOptional = User.fromCSVString(stringObjectCSV);
+                    //userOptional.ifPresent(users::add);
+                    userOptional.ifPresent(user -> {
+                        users.add(user);
+                        System.out.println("Загружен пользователь: " + user.toString());
+                    });
+                }
             }
-        }
-        else {
+            System.out.println("Всего в файле пользователей: " + users.size());
+        } else {
             System.out.println("Не удалось загрузить данные из файла");
         }
     }
@@ -103,11 +109,14 @@ public class DAOUser implements DAOModel<User> {
 
             User user = User.create()
                     .withName(name)
-                    .withPassword(password)
                     .withEmail(email)
+                    .withPassword(password)
                     .build();
             users.add(user);
+
+            System.out.println("Сгенерирован пользователь: " + user.toString());
         }
+        System.out.println("Всего сгенерировано " + users.size() + " пользователей.");
     }
 
     private String generateRandomString(String characterSet, int length) {

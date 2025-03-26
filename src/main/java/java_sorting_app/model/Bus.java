@@ -43,7 +43,7 @@ public class Bus implements Comparable<Bus>, SerializableToCSVString {
     }
 
     @Override
-    public int compareTo(Bus o){
+    public int compareTo(Bus o) {
         return Comparator.comparing(Bus::getNumber)
                 .thenComparing(Bus::getModel)
                 .thenComparing(Bus::getMileage)
@@ -89,26 +89,18 @@ public class Bus implements Comparable<Bus>, SerializableToCSVString {
 
         BusBuilder busBuilder = Bus.create();
 
-        if (DataValidator.isValidBusNumber(number)) {
-            busBuilder.withNumber(number);
-        }
-        else {
-            System.err.println("Некорректный номер автобуса из файла: " + number);
-        }
+        Optional<String> numberOptional = DataValidator.validateAndReturnBusNumber(number);
+        numberOptional.ifPresentOrElse(busBuilder::withNumber,
+                () -> System.err.println("Некорректный номер автобуса из файла."));
 
-        if (DataValidator.isValidBusModel(model)) {
-            busBuilder.withModel(model);
-        }
-        else {
-            System.err.println("Некорректная модель автобуса из файла: " + model);
-        }
+        Optional<String> modelOptional = DataValidator.validateAndReturnBusModel(model);
+        modelOptional.ifPresentOrElse(busBuilder::withModel,
+                () -> System.err.println("Некорректная модель автобуса из файла."));
 
-        if (DataValidator.isValidMileage(String.valueOf(mileage))) {
-            busBuilder.withMileage(mileage);
-        }
-        else {
-            System.err.println("Некорректный пробег автобуса из файла: " + mileage);
-        }
+        Optional<Integer> mileageOptional = DataValidator.validateAndReturnMileage(String.valueOf(mileage));
+        mileageOptional.ifPresentOrElse(busBuilder::withMileage,
+                () -> System.err.println("Некорректное значение пробега автобуса из файла.")
+        );
 
         Bus bus = busBuilder.build();
 

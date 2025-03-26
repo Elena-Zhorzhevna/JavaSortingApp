@@ -22,7 +22,7 @@ public class DAOBus implements DAOModel<Bus> {
 
     @Override
     public void addAll(CustomArrayList<Bus> elements) {
-        for(int index = 0; index < elements.size(); index++) {
+        for (int index = 0; index < elements.size(); index++) {
             buses.add(elements.get(index));
         }
     }
@@ -36,15 +36,14 @@ public class DAOBus implements DAOModel<Bus> {
     public int findElement(Bus element) {
         int index = 0;
         //index = BinarySearch.search(buses, element);
-        if(index >= 0){
+        if (index >= 0) {
             System.out.println("Найден автобус: " + buses.get(index));
             System.out.println("Сохранить найденный автобус в файл? (y/n)");
             Scanner scanner = new Scanner(System.in);
-            if(scanner.next().toLowerCase().equals("y")){
+            if (scanner.next().toLowerCase().equals("y")) {
                 saveToFile(buses.get(index), "busesFinded.csv");
             }
-        }
-        else {
+        } else {
             System.out.println("Автобус не найден :(");
         }
         return -1;
@@ -88,11 +87,17 @@ public class DAOBus implements DAOModel<Bus> {
         if (resultOptional.isPresent()) {
             String[] rows = resultOptional.get();
             for (String stringObjectCSV : rows) {
-                Optional<Bus> busOptional = Bus.fromCSVString(stringObjectCSV);
-                busOptional.ifPresent(buses::add);
+                if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
+                    Optional<Bus> busOptional = Bus.fromCSVString(stringObjectCSV);
+                    //busOptional.ifPresent(buses::add);
+                    busOptional.ifPresent(bus -> {
+                        buses.add(bus);
+                        System.out.println("Загружен автобус: " + bus.toString());
+                    });
+                }
             }
-        }
-        else {
+            System.out.println("Всего в файле автобусов: " + buses.size());
+        } else {
             System.out.println("Не удалось загрузить данные из файла");
         }
     }
@@ -115,7 +120,9 @@ public class DAOBus implements DAOModel<Bus> {
                     .withMileage(mileage)
                     .build();
             buses.add(bus);
-        }
-    }
 
+            System.out.println("Сгенерирован автобус: " + bus.toString());
+        }
+        System.out.println("Всего сгенерировано " + buses.size() + " автобусов.");
+    }
 }

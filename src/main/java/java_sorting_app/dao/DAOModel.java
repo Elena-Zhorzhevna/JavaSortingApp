@@ -40,7 +40,7 @@ public interface DAOModel<T> {
             String line;
             int index = 0;
 
-            while ( ( (line = reader.readLine()) != null ) && (index < numberRows)) {
+            while (((line = reader.readLine()) != null) && (index < numberRows)) {
                 rows[index] = line;
                 index++;
             }
@@ -116,5 +116,4 @@ public interface DAOModel<T> {
             System.out.println("Ошибка при записи в файл: " + e.getMessage());
         }
     }
-
 }
