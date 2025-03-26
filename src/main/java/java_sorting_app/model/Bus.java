@@ -3,9 +3,10 @@ package java_sorting_app.model;
 import java_sorting_app.validator.DataValidator;
 
 
+import java.util.Comparator;
 import java.util.Optional;
 
-public class Bus implements SerializableToCSVString {
+public class Bus implements Comparable<Bus>, SerializableToCSVString {
     private String number;
     private String model;
     private int mileage;
@@ -41,9 +42,17 @@ public class Bus implements SerializableToCSVString {
                 '}';
     }
 
+    @Override
+    public int compareTo(Bus o){
+        return Comparator.comparing(Bus::getNumber)
+                .thenComparing(Bus::getModel)
+                .thenComparing(Bus::getMileage)
+                .compare(this, o);
+    }
+
     public static class BusBuilder {
-        private String number;
-        private String model;
+        private String number = "";
+        private String model = "";
         private int mileage;
 
         public BusBuilder withNumber(String number) {

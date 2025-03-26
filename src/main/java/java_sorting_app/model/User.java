@@ -2,9 +2,10 @@ package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
 
+import java.util.Comparator;
 import java.util.Optional;
 
-public class User implements SerializableToCSVString {
+public class User implements Comparable<User>, SerializableToCSVString {
     private String name;
     private String password;
     private String email;
@@ -36,15 +37,23 @@ public class User implements SerializableToCSVString {
                 '}';
     }
 
+    @Override
+    public int compareTo(User o){
+        return Comparator.comparing(User::getName)
+                .thenComparing(User::getEmail)
+                .thenComparing(User::getPassword)
+                .compare(this, o);
+    }
+
     public static UserBuilder create() {
         return new UserBuilder();
     }
 
     // Статический вложенный класс UserBuilder для паттерна "Строитель"
     public static class UserBuilder {
-        private String name;
-        private String password;
-        private String email;
+        private String name = "";
+        private String password = "";
+        private String email = "";
 
         // Методы для установки значений
         public UserBuilder withName(String name) {
