@@ -1,27 +1,19 @@
-package java_sorting_app.handlers;
+package java_sorting_app.controllers;
 import java_sorting_app.dao.DAOModel;
 import java_sorting_app.menu.MenuController;
-import java_sorting_app.model.Bus;
 
 
-public abstract class Handler {
+public abstract class Controller {
 
-    protected Handler parentHandler;
+    protected Controller parentController;
     protected MenuController menuController;
     
-    public Handler(String title, Handler parentHandler) {
+    public Controller(String title, Controller parentController) {
         menuController = new MenuController(title);
-        this.parentHandler = parentHandler;
+        this.parentController = parentController;
     }
 
-    protected DAOModel getDAOModel(){
-        if(parentHandler != null){
-            return parentHandler.getDAOModel();
-        }
-        return null;
-    }
-
-    public Handler getHandler(){
+    public Controller getHandler(){
         return this;
     }
     
@@ -29,14 +21,14 @@ public abstract class Handler {
         return menuController.buildMenu();
     }
 
-    public Handler process(String numberMenu) {
+    public Controller process(String numberMenu) {
         try {
             int menuNum = Integer.parseInt(numberMenu);
             if (!menuController.containsItem(menuNum)) {
                 System.out.println("Menu doesn't exist");
                 return this;
             }
-            IProcessor<Handler> handler = menuController.getHandler(menuNum);
+            IProcessor<Controller> handler = menuController.getHandler(menuNum);
             return handler.process();
         }
         catch (NumberFormatException e) {

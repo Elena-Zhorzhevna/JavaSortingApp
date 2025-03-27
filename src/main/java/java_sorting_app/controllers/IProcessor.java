@@ -1,4 +1,4 @@
-package java_sorting_app.handlers;
+package java_sorting_app.controllers;
 
 @FunctionalInterface
 public interface IProcessor<T> {
