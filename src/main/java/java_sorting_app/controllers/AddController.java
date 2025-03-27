@@ -1,6 +1,5 @@
 package java_sorting_app.controllers;
 
-
 import java_sorting_app.dao.DAOModel;
 
 public class AddController extends Controller {

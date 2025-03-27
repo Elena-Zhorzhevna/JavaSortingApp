@@ -28,7 +28,7 @@ public abstract class Controller {
                 System.out.println("Введенный пункт меню не существует!");
                 return this;
             }
-            IProcessor<Controller> handler = menuController.getHandler(menuNum);
+            IHandler<Controller> handler = menuController.getHandler(menuNum);
             return handler.process();
         }
         catch (NumberFormatException e) {

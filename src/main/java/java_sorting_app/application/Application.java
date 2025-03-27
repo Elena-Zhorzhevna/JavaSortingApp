@@ -1,4 +1,5 @@
 package java_sorting_app.application;
+
 import java_sorting_app.controllers.Controller;
 import java_sorting_app.controllers.MainController;
 import java.util.Scanner;

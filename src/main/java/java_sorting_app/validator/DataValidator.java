@@ -3,7 +3,6 @@ package java_sorting_app.validator;
 import java_sorting_app.model.Bus;
 import java_sorting_app.model.Student;
 import java_sorting_app.model.User;
-
 import java.util.Optional;
 
 public class DataValidator {

@@ -2,7 +2,6 @@ package java_sorting_app.dao;
 
 import java_sorting_app.model.SerializableToCSVString;
 import java_sorting_app.util.CustomArrayList;
-
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;

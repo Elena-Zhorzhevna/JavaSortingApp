@@ -1,7 +1,6 @@
 package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
-
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
     private double averageGrade;
     private long studentBookNumber;
 
-    // Конструктор с параметрами, который используется в билдере
     private Student(int groupNumber, double averageGrade, long studentBookNumber) {
         this.groupNumber = groupNumber;
         this.averageGrade = averageGrade;
@@ -61,13 +59,11 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
         return new StudentBuilder();
     }
 
-    // Статический вложенный класс StudentBuilder для паттерна "Строитель"
     public static class StudentBuilder {
         private int groupNumber;
         private double averageGrade;
         private long studentBookNumber;
 
-        // Методы для установки значений
         public StudentBuilder withGroupNumber(int groupNumber) {
             this.groupNumber = groupNumber;
             return this;
@@ -91,7 +87,6 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
     public static Optional<Student> fromCSVString(String stringObjectCSV) {
         String[] studentData = stringObjectCSV.split(";");
         if (studentData.length != 3) {
-            System.err.println("Ошибка в данных файла: строка не соответствует формату.");
             return Optional.empty();
         }
 

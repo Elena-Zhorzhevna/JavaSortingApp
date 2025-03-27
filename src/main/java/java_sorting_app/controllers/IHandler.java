@@ -1,6 +1,6 @@
 package java_sorting_app.controllers;
 
 @FunctionalInterface
-public interface IProcessor<T> {
+public interface IHandler<T> {
     T process();
 }

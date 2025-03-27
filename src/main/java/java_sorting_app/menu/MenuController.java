@@ -1,7 +1,7 @@
 package java_sorting_app.menu;
 
 import java_sorting_app.controllers.Controller;
-import java_sorting_app.controllers.IProcessor;
+import java_sorting_app.controllers.IHandler;
 import java_sorting_app.util.CustomArrayList;
 
 public class MenuController {
@@ -9,7 +9,7 @@ public class MenuController {
     String annotation;
     CustomArrayList<Integer> numbersItemMenu;
     CustomArrayList<String> labelItemsMenu;
-    CustomArrayList<IProcessor<Controller>> handlers;
+    CustomArrayList<IHandler<Controller>> handlers;
 
     public MenuController(String title) {
         this.title = title;
@@ -27,7 +27,7 @@ public class MenuController {
         return title;
     }
 
-    public void addItem(Integer numberItem, String labelItem, IProcessor<Controller> handler) {
+    public void addItem(Integer numberItem, String labelItem, IHandler<Controller> handler) {
         numbersItemMenu.add(numberItem);
         labelItemsMenu.add(labelItem);
         handlers.add(handler);
@@ -50,7 +50,7 @@ public class MenuController {
         return menuItems.toString();
     }
 
-    public IProcessor<Controller> getHandler(int index) {
+    public IHandler<Controller> getHandler(int index) {
         for(int i = 0; i < numbersItemMenu.size(); i++) {
             if (numbersItemMenu.get(i) == index) {
                 return handlers.get(i);

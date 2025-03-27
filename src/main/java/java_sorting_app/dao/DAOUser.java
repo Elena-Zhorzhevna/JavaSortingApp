@@ -1,11 +1,9 @@
 package java_sorting_app.dao;
 
-
 import java_sorting_app.model.User;
 import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
 import java_sorting_app.validator.DataValidator;
-
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;

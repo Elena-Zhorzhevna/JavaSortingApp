@@ -1,8 +1,6 @@
 package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
-
-
 import java.util.Comparator;
 import java.util.Optional;
 
