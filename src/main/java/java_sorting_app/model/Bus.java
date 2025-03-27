@@ -1,8 +1,6 @@
 package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
-
-
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -43,11 +41,22 @@ public class Bus implements Comparable<Bus>, SerializableToCSVString {
     }
 
     @Override
-    public int compareTo(Bus o){
+    public int compareTo(Bus o) {
         return Comparator.comparing(Bus::getNumber)
                 .thenComparing(Bus::getModel)
                 .thenComparing(Bus::getMileage)
                 .compare(this, o);
+    }
+
+    public int magicCompare(Bus o) {
+        int thisMileage = this.getMileage();
+        int oMileage = o.getMileage();
+
+        if (thisMileage % 2 == 0 && oMileage % 2 == 0) {
+            return Integer.compare(thisMileage, oMileage);
+        } else {
+            return 0;
+        }
     }
 
     public static class BusBuilder {
@@ -79,36 +88,23 @@ public class Bus implements Comparable<Bus>, SerializableToCSVString {
 
         String[] busData = stringObjectCSV.split(";");
         if (busData.length != 3) {
-            System.err.println("Ошибка в данных файла: строка не соответствует формату.");
             return Optional.empty();
         }
 
-        String number = busData[0].trim();
-        String model = busData[1].trim();
-        int mileage = Integer.parseInt(busData[2].trim());
+        String number = busData[0];
+        String model = busData[1];
+        String mileage = busData[2];
 
         BusBuilder busBuilder = Bus.create();
 
-        if (DataValidator.isValidBusNumber(number)) {
-            busBuilder.withNumber(number);
-        }
-        else {
-            System.err.println("Некорректный номер автобуса из файла: " + number);
-        }
+        Optional<String> numberOptional = DataValidator.validateAndReturnBusNumber(number);
+        numberOptional.ifPresent(busBuilder::withNumber);
 
-        if (DataValidator.isValidBusModel(model)) {
-            busBuilder.withModel(model);
-        }
-        else {
-            System.err.println("Некорректная модель автобуса из файла: " + model);
-        }
+        Optional<String> modelOptional = DataValidator.validateAndReturnBusModel(model);
+        modelOptional.ifPresent(busBuilder::withModel);
 
-        if (DataValidator.isValidMileage(String.valueOf(mileage))) {
-            busBuilder.withMileage(mileage);
-        }
-        else {
-            System.err.println("Некорректный пробег автобуса из файла: " + mileage);
-        }
+        Optional<Integer> mileageOptional = DataValidator.validateAndReturnMileage(mileage);
+        mileageOptional.ifPresent(busBuilder::withMileage);
 
         Bus bus = busBuilder.build();
 

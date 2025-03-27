@@ -1,10 +1,7 @@
 package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
-
-import java.io.Serializable;
 import java.util.Comparator;
-import java.util.InputMismatchException;
 import java.util.Optional;
 
 public class Student implements Comparable<Student>, SerializableToCSVString {
@@ -12,7 +9,6 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
     private double averageGrade;
     private long studentBookNumber;
 
-    // Конструктор с параметрами, который используется в билдере
     private Student(int groupNumber, double averageGrade, long studentBookNumber) {
         this.groupNumber = groupNumber;
         this.averageGrade = averageGrade;
@@ -41,24 +37,33 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
     }
 
     @Override
-    public int compareTo(Student o){
+    public int compareTo(Student o) {
         return Comparator.comparing(Student::getGroupNumber)
                 .thenComparing(Student::getStudentBookNumber)
                 .thenComparing(Student::getAverageGrade)
                 .compare(this, o);
     }
 
+    public int magicCompare(Student o) {
+        int thisGroupNumber = this.getGroupNumber();
+        int oGroupNumber = o.getGroupNumber();
+
+        if (thisGroupNumber % 2 == 0 && oGroupNumber % 2 == 0) {
+            return Integer.compare(thisGroupNumber, oGroupNumber);
+        } else {
+            return 0;
+        }
+    }
+
     public static StudentBuilder create() {
         return new StudentBuilder();
     }
 
-    // Статический вложенный класс StudentBuilder для паттерна "Строитель"
     public static class StudentBuilder {
         private int groupNumber;
         private double averageGrade;
         private long studentBookNumber;
 
-        // Методы для установки значений
         public StudentBuilder withGroupNumber(int groupNumber) {
             this.groupNumber = groupNumber;
             return this;
@@ -82,32 +87,23 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
     public static Optional<Student> fromCSVString(String stringObjectCSV) {
         String[] studentData = stringObjectCSV.split(";");
         if (studentData.length != 3) {
-            System.err.println("Ошибка в данных файла: строка не соответствует формату.");
             return Optional.empty();
         }
 
+        String studentGroupNumber = studentData[0];
+        String studentAverageGrade = studentData[1];
+        String studentBookNumber = studentData[2];
+
         StudentBuilder studentBuilder = Student.create();
 
-        if(DataValidator.isValidGroupNumber(studentData[0])) {
-            studentBuilder.withStudentBookNumber(Long.parseLong(studentData[0]));
-        }
-        else {
-            System.out.println("Некорректный номер группы.");
-        }
+        Optional<Integer> groupNumberOptional = DataValidator.validateAndReturnGroupNumber(studentGroupNumber);
+        groupNumberOptional.ifPresent(studentBuilder::withGroupNumber);
 
-        if(DataValidator.isValidAverageGrade(studentData[1])) {
-            studentBuilder.withAverageGrade(Double.parseDouble(studentData[1]));
-        }
-        else {
-            System.out.println("Некорректный средний балл");
-        }
+        Optional<Double> averageGradeOptional = DataValidator.validateAndReturnAverageGrade(studentAverageGrade);
+        averageGradeOptional.ifPresent(studentBuilder::withAverageGrade);
 
-        if(DataValidator.isValidStudentBookNumber(studentData[2])) {
-            studentBuilder.withStudentBookNumber(Long.parseLong(studentData[2]));
-        }
-        else {
-            System.out.println("Некорректный номер студенческого билета");
-        }
+        Optional<Long> studentBookNumberOptional = DataValidator.validateAndReturnStudentBookNumber(studentBookNumber);
+        studentBookNumberOptional.ifPresent(studentBuilder::withStudentBookNumber);
 
         Student student = studentBuilder.build();
         return Optional.of(student);

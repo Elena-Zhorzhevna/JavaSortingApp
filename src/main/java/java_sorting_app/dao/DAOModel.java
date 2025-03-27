@@ -2,30 +2,31 @@ package java_sorting_app.dao;
 
 import java_sorting_app.model.SerializableToCSVString;
 import java_sorting_app.util.CustomArrayList;
-
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Random;
 
 
-public interface DAOModel<T> {
+public interface DAOModel {
 
-    void add(T element);
-
-    void addAll(CustomArrayList<T> elements);
-
-    CustomArrayList<T> getElements();
+    void printElements();
 
     void loadManual();
 
     void sortElements();
 
-    int findElement(T element);
+    void magicSortElements();
+
+    void findElement();
 
     void loadFromFile();
 
     void loadRandom();
+
+    void saveToFile();
 
     default Optional<String[]> getRowsFromFile(String filename, int numberRows) {
         URL url = getClass().getResource("/" + filename);
@@ -40,7 +41,7 @@ public interface DAOModel<T> {
             String line;
             int index = 0;
 
-            while ( ( (line = reader.readLine()) != null ) && (index < numberRows)) {
+            while (((line = reader.readLine()) != null) && (index < numberRows)) {
                 rows[index] = line;
                 index++;
             }
@@ -70,8 +71,8 @@ public interface DAOModel<T> {
     }
 
     default void saveToFile(CustomArrayList<? extends SerializableToCSVString> elements, String filename) {
-        URL url = getClass().getResource("/" + filename);
-        File file = new File(url.getFile());
+        Path source = Paths.get(this.getClass().getResource("/").getPath() + filename);
+        File file = source.toFile();
 
         if (!file.exists()) {
             try {
@@ -95,8 +96,8 @@ public interface DAOModel<T> {
     }
 
     default void saveToFile(SerializableToCSVString element, String filename) {
-        URL url = getClass().getResource("/" + filename);
-        File file = new File(url.getFile());
+        Path source = Paths.get(this.getClass().getResource("/").getPath() + filename);
+        File file = source.toFile();
 
         if (!file.exists()) {
             try {
@@ -109,12 +110,11 @@ public interface DAOModel<T> {
                 return;
             }
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write(element.toCSVString());
             writer.newLine();
         } catch (IOException e) {
             System.out.println("Ошибка при записи в файл: " + e.getMessage());
         }
     }
-
 }

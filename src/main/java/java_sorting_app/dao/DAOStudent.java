@@ -1,12 +1,15 @@
 package java_sorting_app.dao;
 
 import java_sorting_app.model.Student;
+import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
+import java_sorting_app.validator.DataValidator;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
-public class DAOStudent implements DAOModel<Student> {
+public class DAOStudent implements DAOModel {
 
     CustomArrayList<Student> students;
 
@@ -15,30 +18,67 @@ public class DAOStudent implements DAOModel<Student> {
     }
 
     @Override
+    public void printElements() {
+        for (int i = 0; i < students.size(); i++) {
+            Student student = students.get(i);
+            System.out.println(student);
+        }
+    }
+
     public void add(Student element) {
         students.add(element);
     }
 
-    @Override
     public void addAll(CustomArrayList<Student> elements) {
-        for(int i = 0; i < elements.size(); i++){
+        for (int i = 0; i < elements.size(); i++) {
             students.add(elements.get(i));
         }
     }
 
-    @Override
     public CustomArrayList<Student> getElements() {
         return students;
     }
 
     @Override
     public void sortElements() {
-
+        CustomArrayList.selectionSort(students, Student::compareTo);
     }
 
     @Override
-    public int findElement(Student element) {
-        return -1;
+    public void magicSortElements() {
+        CustomArrayList.selectionSort(students, Student::magicCompare);
+    }
+
+    @Override
+    public void findElement() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Поиск проводится по номеру студенческого билета.");
+        System.out.println("Введите номер студенческого билета:");
+
+        long studentBookNumber = scanner.nextLong();
+
+        Student.StudentBuilder studentBuilder = new Student.StudentBuilder();
+        Comparator<Student> comparator = Comparator.comparing(Student::getStudentBookNumber);
+        studentBuilder.withStudentBookNumber(studentBookNumber);
+
+        Student student = studentBuilder.build();
+
+        int index = BinarySearch.search(students, student, comparator);
+        if (index >= 0) {
+            System.out.println("Найден студент: " + students.get(index));
+            System.out.println("Сохранить найденного студента в файл? (y/n)");
+
+            if (scanner.next().equalsIgnoreCase("y")) {
+                saveToFile(students.get(index), "studentsFound.csv");
+            }
+        } else {
+            System.out.println("Студент не найден :(");
+        }
+    }
+
+    @Override
+    public void saveToFile() {
+        saveToFile(students, "studentsCollection.csv");
     }
 
     @Override
@@ -46,7 +86,7 @@ public class DAOStudent implements DAOModel<Student> {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Введите студента в формате: номер_группы;средний_бал;номер_читательского_билета");
+            System.out.println("Введите студента в формате: номер группы ; средний бал ; номер читательского билета");
             System.out.println("Или введите 'exit' для завершения");
             System.out.print("? > ");
 
@@ -55,7 +95,19 @@ public class DAOStudent implements DAOModel<Student> {
                 break;
             }
 
-            Optional<Student> studentOptional = Student.fromCSVString(inputLine);
+            String[] studentData = inputLine.split(",");
+            if (studentData.length != 3) {
+                System.err.println("Ошибка в данных файла: строка не соответствует формату.");
+                continue;
+            }
+
+            String studentGroupNumber = studentData[0].trim();
+            String studentAverageGrade = studentData[1].trim();
+            String studentBookNumber = studentData[2].trim();
+
+            Optional<Student> studentOptional = DataValidator.validateAndReturnStudentWithComment(
+                    studentGroupNumber, studentAverageGrade, studentBookNumber);
+
             studentOptional.ifPresent(students::add);
             studentOptional.ifPresentOrElse(
                     student -> System.out.println("Вы добавили студента: " + student),
@@ -73,11 +125,17 @@ public class DAOStudent implements DAOModel<Student> {
         if (resultOptional.isPresent()) {
             String[] rows = resultOptional.get();
             for (String stringObjectCSV : rows) {
-                Optional<Student> busOptional = Student.fromCSVString(stringObjectCSV);
-                busOptional.ifPresent(students::add);
+                if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
+                    Optional<Student> studentOptional = Student.fromCSVString(stringObjectCSV);
+                    //busOptional.ifPresent(students::add);
+                    studentOptional.ifPresent(student -> {
+                        students.add(student);
+                        System.out.println("Загружен студент: " + student.toString());
+                    });
+                }
             }
-        }
-        else {
+            System.out.println("Всего в файле студентов: " + students.size());
+        } else {
             System.out.println("Не удалось загрузить данные из файла");
         }
     }
@@ -102,6 +160,9 @@ public class DAOStudent implements DAOModel<Student> {
                     .build();
 
             students.add(student);
+
+            System.out.println("Сгенерирован студент: " + student.toString());
         }
+        System.out.println("Всего сгенерировано " + students.size() + " студентов.");
     }
 }

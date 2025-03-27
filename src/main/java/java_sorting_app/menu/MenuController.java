@@ -1,6 +1,7 @@
 package java_sorting_app.menu;
 
-import java_sorting_app.handlers.Handler;
+import java_sorting_app.controllers.Controller;
+import java_sorting_app.controllers.IHandler;
 import java_sorting_app.util.CustomArrayList;
 
 public class MenuController {
@@ -8,7 +9,7 @@ public class MenuController {
     String annotation;
     CustomArrayList<Integer> numbersItemMenu;
     CustomArrayList<String> labelItemsMenu;
-    CustomArrayList<Handler> handlers;
+    CustomArrayList<IHandler<Controller>> handlers;
 
     public MenuController(String title) {
         this.title = title;
@@ -26,7 +27,7 @@ public class MenuController {
         return title;
     }
 
-    public void addItem(Integer numberItem, String labelItem, Handler handler) {
+    public void addItem(Integer numberItem, String labelItem, IHandler<Controller> handler) {
         numbersItemMenu.add(numberItem);
         labelItemsMenu.add(labelItem);
         handlers.add(handler);
@@ -37,7 +38,7 @@ public class MenuController {
         menuItems.append("-----------------").append("\n");
         menuItems.append(title).append("\n");
         menuItems.append("-----------------").append("\n");
-        if(annotation.length() > 0) {
+        if(!annotation.isEmpty()) {
             menuItems.append(annotation).append("\n");
         }
         for (int i = 0; i < numbersItemMenu.size(); i++) {
@@ -49,7 +50,7 @@ public class MenuController {
         return menuItems.toString();
     }
 
-    public Handler getHandler(int index) {
+    public IHandler<Controller> getHandler(int index) {
         for(int i = 0; i < numbersItemMenu.size(); i++) {
             if (numbersItemMenu.get(i) == index) {
                 return handlers.get(i);

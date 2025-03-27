@@ -1,7 +1,6 @@
 package java_sorting_app.model;
 
 import java_sorting_app.validator.DataValidator;
-
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -38,24 +37,33 @@ public class User implements Comparable<User>, SerializableToCSVString {
     }
 
     @Override
-    public int compareTo(User o){
+    public int compareTo(User o) {
         return Comparator.comparing(User::getName)
                 .thenComparing(User::getEmail)
                 .thenComparing(User::getPassword)
                 .compare(this, o);
     }
 
+    public int magicCompare(User o) {
+        int thisNameLength = this.getName().length();
+        int oNameLength = o.getName().length();
+
+        if (thisNameLength % 2 == 0 && oNameLength % 2 == 0) {
+            return Integer.compare(thisNameLength, oNameLength);
+        } else {
+            return 0;
+        }
+    }
+
     public static UserBuilder create() {
         return new UserBuilder();
     }
 
-    // Статический вложенный класс UserBuilder для паттерна "Строитель"
     public static class UserBuilder {
         private String name = "";
         private String password = "";
         private String email = "";
 
-        // Методы для установки значений
         public UserBuilder withName(String name) {
             this.name = name;
             return this;
@@ -71,7 +79,6 @@ public class User implements Comparable<User>, SerializableToCSVString {
             return this;
         }
 
-        // Метод для создания объекта User
         public User build() {
             return new User(name, password, email);
         }
@@ -81,38 +88,23 @@ public class User implements Comparable<User>, SerializableToCSVString {
 
         String[] userData = stringObjectCSV.split(";");
         if (userData.length != 3) {
-            System.err.println("Ошибка в данных - строка не соответствует формату.");
             return Optional.empty();
         }
+
+        String userName = userData[0];
+        String userEmail = userData[1];
+        String userPassword = userData[2];
 
         User.UserBuilder userBuilder = User.create();
 
-        if (DataValidator.isValidUserName(userData[0])) {
-            userBuilder.withName(userData[0]);
-        }
-        else {
-            System.err.println("У пользователя обязательно должно быть имя");
-            return Optional.empty();
-        }
+        Optional<String> nameOptional = DataValidator.validateAndReturnUserName(userName);
+        nameOptional.ifPresent(userBuilder::withName);
 
-        if (DataValidator.isValidEmail(userData[1])) {
-            userBuilder.withEmail(userData[1]);
-        }
-        else {
-            System.err.println("Некорректный email пользователя");
-        }
+        Optional<String> emailOptional = DataValidator.validateAndReturnEmail(userEmail);
+        emailOptional.ifPresent(userBuilder::withEmail);
 
-        if (DataValidator.isValidPassword(userData[2])) {
-            userBuilder.withPassword(userData[2]);
-        }
-        else {
-            System.out.println("Некорректный пароль.\n" +
-                    "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
-                    "Заглавную латинскую букву (A-Z)\n" +
-                    "Строчную латинскую букву (a-z)\n" +
-                    "Цифру\n" +
-                    "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.");
-        }
+        Optional<String> passwordOptional = DataValidator.validateAndReturnPassword(userPassword);
+        passwordOptional.ifPresent(userBuilder::withPassword);
 
         User user = userBuilder.build();
 
