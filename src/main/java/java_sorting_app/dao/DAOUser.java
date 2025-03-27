@@ -40,42 +40,37 @@ public class DAOUser implements DAOModel {
         CustomArrayList.selectionSort(users, User::magicCompare);
     }
 
-
     @Override
     public void findElement() {
-        System.out.println("Введите искомые данные пользователя в формате: имя;e-mail");
         Scanner scanner = new Scanner(System.in);
-        String inputLine = scanner.nextLine();
 
-        String[] userData = inputLine.split(";");
-        if (userData.length != 2) {
-            System.out.println("Введены некорректные данные");
-            System.out.println("Поиск прекращен");
-            return;
-        }
+        System.out.println("Поиск проводиться по имени и e-mail пользователя");
+        System.out.println("Введите данные искомого пользователя");
+        System.out.print("Имя пользователя: ");
+        String nameUser = scanner.nextLine();
+
+        System.out.print("E-mail пользователя: ");
+        String emailUser = scanner.nextLine();
 
         User.UserBuilder userBuilder = new User.UserBuilder();
         Comparator<User> comparator;
 
-        Optional<String> nameOptional = DataValidator.validateAndReturnUserName(userData[0].trim());
-        nameOptional.ifPresent(userBuilder::withName);
-
-        Optional<String> emailOptional = DataValidator.validateAndReturnEmail(userData[1].trim());
-        emailOptional.ifPresent(userBuilder::withEmail);
-
-        if(nameOptional.isPresent() && emailOptional.isPresent()) {
-            comparator = Comparator.comparing(User::getName).thenComparing(User::getEmail);
+        if (nameUser.isEmpty() && emailUser.isEmpty()) {
+            System.out.println("Не введены данные для поиска");
+            System.out.println("Поиск прекращен!");
+            return;
         }
-        else if(nameOptional.isPresent()) {
-            comparator = Comparator.comparing(User::getName);
-        }
-        else if(emailOptional.isPresent()) {
+        else if (nameUser.isEmpty()) {
             comparator = Comparator.comparing(User::getEmail);
+            userBuilder.withEmail(emailUser);
+        }
+        else if (emailUser.isEmpty()) {
+            comparator = Comparator.comparing(User::getName);
+            userBuilder.withName(nameUser);
         }
         else {
-            System.out.println("Введены некорректные данные");
-            System.out.println("Поиск прекращен");
-            return;
+            comparator = Comparator.comparing(User::getName).thenComparing(User::getEmail);
+            userBuilder.withName(nameUser).withEmail(emailUser);
         }
 
         User user = userBuilder.build();
@@ -103,7 +98,7 @@ public class DAOUser implements DAOModel {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Введите пользователя в формате: наименование;e-mail;пароль");
+            System.out.println("Введите пользователя в формате: имя ; e-mail ; пароль");
             System.out.println("Или введите 'exit' для завершения");
             System.out.print("? > ");
 

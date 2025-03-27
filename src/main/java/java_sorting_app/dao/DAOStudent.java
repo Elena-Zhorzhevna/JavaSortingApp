@@ -62,7 +62,7 @@ public class DAOStudent implements DAOModel{
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Введите студента в формате: номер_группы;средний_бал;номер_читательского_билета");
+            System.out.println("Введите студента в формате: номер группы ; средний бал ; номер читательского билета");
             System.out.println("Или введите 'exit' для завершения");
             System.out.print("? > ");
 

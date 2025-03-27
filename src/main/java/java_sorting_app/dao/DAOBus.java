@@ -80,7 +80,7 @@ public class DAOBus implements DAOModel {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Введите автобус в формате: номер;модель;пробег");
+            System.out.println("Введите автобус в формате: номер ; модель ; пробег");
             System.out.println("Или введите 'exit' для завершения");
             System.out.print("? > ");
 
