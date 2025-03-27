@@ -45,6 +45,17 @@ public class User implements Comparable<User>, SerializableToCSVString {
                 .compare(this, o);
     }
 
+    public int magicCompare(User o) {
+        int thisNameLength = this.getName().length();
+        int oNameLength = o.getName().length();
+
+        if (thisNameLength % 2 == 0 && oNameLength % 2 == 0) {
+            return Integer.compare(thisNameLength, oNameLength);
+        } else {
+            return 0;
+        }
+    }
+
     public static UserBuilder create() {
         return new UserBuilder();
     }

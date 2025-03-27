@@ -3,7 +3,6 @@ package java_sorting_app.dao;
 import java_sorting_app.model.Bus;
 import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
-
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -63,8 +62,12 @@ public class DAOBus implements DAOModel {
 
     @Override
     public void sortElements() {
-        //CustomArrayList<Bus> temp = new CustomArrayList<>();
-        //CustomInsertionSort.selectionSort(buses, );
+        CustomArrayList.selectionSort(buses, Bus::compareTo);
+    }
+
+    @Override
+    public void magicSortElements(){
+        CustomArrayList.selectionSort(buses, Bus::magicCompare);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package java_sorting_app.dao;
 
-import java_sorting_app.model.Bus;
 import java_sorting_app.model.Student;
 import java_sorting_app.util.CustomArrayList;
 
@@ -40,7 +39,12 @@ public class DAOStudent implements DAOModel{
 
     @Override
     public void sortElements() {
+        CustomArrayList.selectionSort(students, Student::compareTo);
+    }
 
+    @Override
+    public void magicSortElements(){
+        CustomArrayList.selectionSort(students, Student::magicCompare);
     }
 
     @Override

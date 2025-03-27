@@ -15,6 +15,7 @@ public class UserHandler extends Handler {
         menuController.addItem(3, "Найти пользователя", this::findUser);
         menuController.addItem(4, "Сохранить коллекцию", this::saveToFile);
         menuController.addItem(5, "Вывести на экран коллекцию", this::printElements);
+        menuController.addItem(6, "Магическая сортировка", this::magicSortCollection);
         menuController.addItem(0, "⮌ Назад", handler::getHandler);
     }
 
@@ -25,6 +26,11 @@ public class UserHandler extends Handler {
 
     private Handler sortCollection() {
         getDAOModel().sortElements();
+        return this;
+    }
+
+    private Handler magicSortCollection() {
+        getDAOModel().magicSortElements();
         return this;
     }
 

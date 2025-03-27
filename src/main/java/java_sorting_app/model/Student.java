@@ -46,6 +46,17 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
                 .compare(this, o);
     }
 
+    public int magicCompare(Student o) {
+        int thisGroupNumber = this.getGroupNumber();
+        int oGroupNumber = o.getGroupNumber();
+
+        if (thisGroupNumber % 2 == 0 && oGroupNumber % 2 == 0) {
+            return Integer.compare(thisGroupNumber, oGroupNumber);
+        } else {
+            return 0;
+        }
+    }
+
     public static StudentBuilder create() {
         return new StudentBuilder();
     }

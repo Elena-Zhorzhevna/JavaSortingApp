@@ -50,6 +50,17 @@ public class Bus implements Comparable<Bus>, SerializableToCSVString {
                 .compare(this, o);
     }
 
+    public int magicCompare(Bus o) {
+        int thisMileage = this.getMileage();
+        int oMileage = o.getMileage();
+
+        if (thisMileage % 2 == 0 && oMileage % 2 == 0) {
+            return Integer.compare(thisMileage, oMileage);
+        } else {
+            return 0;
+        }
+    }
+
     public static class BusBuilder {
         private String number = "";
         private String model = "";

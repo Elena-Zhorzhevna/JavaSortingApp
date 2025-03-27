@@ -19,6 +19,8 @@ public interface DAOModel {
 
     void sortElements();
 
+    void magicSortElements();
+
     void findElement();
 
     void loadFromFile();

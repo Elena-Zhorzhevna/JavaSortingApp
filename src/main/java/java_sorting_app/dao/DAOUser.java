@@ -35,6 +35,11 @@ public class DAOUser implements DAOModel {
         CustomArrayList.selectionSort(users, User::compareTo);
     }
 
+    @Override
+    public void magicSortElements(){
+        CustomArrayList.selectionSort(users, User::magicCompare);
+    }
+
 
     @Override
     public void findElement() {
@@ -127,7 +132,6 @@ public class DAOUser implements DAOModel {
             for (String stringObjectCSV : rows) {
                 if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
                     Optional<User> userOptional = User.fromCSVString(stringObjectCSV);
-                    //userOptional.ifPresent(users::add);
                     userOptional.ifPresent(user -> {
                         users.add(user);
                         System.out.println("Загружен пользователь: " + user.toString());
