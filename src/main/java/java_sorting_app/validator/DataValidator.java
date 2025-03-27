@@ -84,8 +84,7 @@ public class DataValidator {
     }
 
     public static Optional<String> validateAndReturnPassword(String password) {
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-
+        String passwordRegex = "^(?=.*[@$!%*?&])[\\S]{9,}$";
         if (password != null && !password.isEmpty() && password.matches(passwordRegex)) {
             return Optional.of(password);
         }

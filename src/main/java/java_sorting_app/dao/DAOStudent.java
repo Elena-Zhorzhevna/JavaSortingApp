@@ -1,13 +1,15 @@
 package java_sorting_app.dao;
 
 import java_sorting_app.model.Student;
+import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
 
-public class DAOStudent implements DAOModel{
+public class DAOStudent implements DAOModel {
 
     CustomArrayList<Student> students;
 
@@ -16,7 +18,7 @@ public class DAOStudent implements DAOModel{
     }
 
     @Override
-    public void printElements(){
+    public void printElements() {
         for (int i = 0; i < students.size(); i++) {
             Student student = students.get(i);
             System.out.println(student);
@@ -43,18 +45,40 @@ public class DAOStudent implements DAOModel{
     }
 
     @Override
-    public void magicSortElements(){
+    public void magicSortElements() {
         CustomArrayList.selectionSort(students, Student::magicCompare);
     }
 
     @Override
-    public void saveToFile(){
+    public void findElement() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Поиск проводится по номеру студенческого билета.");
+        System.out.println("Введите номер студенческого билета:");
 
+        long studentBookNumber = scanner.nextLong();
+
+        Student.StudentBuilder studentBuilder = new Student.StudentBuilder();
+        Comparator<Student> comparator = Comparator.comparing(Student::getStudentBookNumber);
+        studentBuilder.withStudentBookNumber(studentBookNumber);
+
+        Student student = studentBuilder.build();
+
+        int index = BinarySearch.search(students, student, comparator);
+        if (index >= 0) {
+            System.out.println("Найден студент: " + students.get(index));
+            System.out.println("Сохранить найденного студента в файл? (y/n)");
+
+            if (scanner.next().equalsIgnoreCase("y")) {
+                saveToFile(students.get(index), "studentsFound.csv");
+            }
+        } else {
+            System.out.println("Студент не найден :(");
+        }
     }
 
     @Override
-    public void findElement() {
-
+    public void saveToFile() {
+        saveToFile(students, "studentsCollection.csv");
     }
 
     @Override

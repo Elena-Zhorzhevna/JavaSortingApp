@@ -109,11 +109,8 @@ public class User implements Comparable<User>, SerializableToCSVString {
         Optional<String> passwordOptional = DataValidator.validateAndReturnPassword(userData[2]);
         passwordOptional.ifPresentOrElse(userBuilder::withPassword,
                 () -> System.out.println("Некорректный пароль.\n" +
-                        "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
-                        "Заглавную латинскую букву (A-Z)\n" +
-                        "Строчную латинскую букву (a-z)\n" +
-                        "Цифру\n" +
-                        "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.")
+                        "Пароль должен содержать хотя бы один \n" +
+                        "специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.")
         );
 
         User user = userBuilder.build();
