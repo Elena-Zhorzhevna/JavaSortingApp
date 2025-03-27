@@ -33,7 +33,7 @@ public class StudentHandler extends Handler {
     }
 
     private Handler saveToFile() {
-        //getDAOModel().();
+        getDAOModel().saveToFile();
         return this;
     }
 

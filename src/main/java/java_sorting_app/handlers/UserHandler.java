@@ -1,9 +1,7 @@
 package java_sorting_app.handlers;
 
-import java_sorting_app.dao.DAOBus;
 import java_sorting_app.dao.DAOModel;
 import java_sorting_app.dao.DAOUser;
-import java_sorting_app.model.User;
 
 public class UserHandler extends Handler {
     private final DAOModel daoModelUser;
@@ -36,7 +34,7 @@ public class UserHandler extends Handler {
     }
 
     private Handler saveToFile() {
-        //getDAOModel().();
+        getDAOModel().saveToFile();
         return this;
     }
 

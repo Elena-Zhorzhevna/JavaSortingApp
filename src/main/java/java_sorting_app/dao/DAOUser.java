@@ -1,13 +1,10 @@
 package java_sorting_app.dao;
 
-import java_sorting_app.model.Bus;
-import java_sorting_app.model.Student;
+
 import java_sorting_app.model.User;
 import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
-import java_sorting_app.util.CustomInsertionSort;
 import java_sorting_app.validator.DataValidator;
-
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
@@ -29,24 +26,15 @@ public class DAOUser implements DAOModel {
         }
     }
 
-    public void add(User element) {
-        users.add(element);
-    }
-
-    public void addAll(CustomArrayList<User> elements) {
-        for (int i = 0; i < elements.size(); i++) {
-            users.add(elements.get(i));
-        }
-    }
-
     public CustomArrayList<User> getElements() {
         return users;
     }
 
     @Override
     public void sortElements() {
-        CustomInsertionSort.selectionSort(users, User::compareTo);
+        CustomArrayList.selectionSort(users, User::compareTo);
     }
+
 
     @Override
     public void findElement() {
@@ -64,42 +52,43 @@ public class DAOUser implements DAOModel {
         boolean isValidName = DataValidator.isValidUserName(elements[0]);
         boolean isValidEmail = DataValidator.isValidEmail(elements[1]);
 
+        User.UserBuilder userBuilder = new User.UserBuilder();
         Comparator<User> comparator;
 
         if (isValidName && isValidEmail) {
-            comparator = Comparator.comparing(User::getEmail).thenComparing(User::getName);
+            comparator = Comparator.comparing(User::getName).thenComparing(User::getEmail);
+            userBuilder.withName(elements[0]).withEmail(elements[1]);
         }
         else if (isValidName) {
             comparator = Comparator.comparing(User::getName);
+            userBuilder.withName(elements[0]);
         }
         else if (isValidEmail) {
             comparator = Comparator.comparing(User::getEmail);
+            userBuilder.withEmail(elements[1]);
         }
         else {
             return;
         }
 
-        Optional<User> userOptional = User.fromCSVString(inputLine);
-        if(userOptional.isPresent()) {
-            User user = userOptional.get();
-            int index = BinarySearch.search(users, user, comparator);
-            if(index >= 0){
-                System.out.println("Найден пользователь: " + users.get(index));
-                System.out.println("Сохранить найденного пользователя в файл? (y/n)");
+        User user = userBuilder.build();
+        int index = BinarySearch.search(users, user, comparator);
+        if(index >= 0){
+            System.out.println("Найден пользователь: " + users.get(index));
+            System.out.println("Сохранить найденного пользователя в файл? (y/n)");
 
-                if(scanner.next().equalsIgnoreCase("y")){
-                    saveToFile(users.get(index), "usersFinded.csv");
-                }
+            if(scanner.next().equalsIgnoreCase("y")){
+                saveToFile(users.get(index), "usersFinded.csv");
             }
-            else {
-                System.out.println("Пользователь не найден :(");
-            }
+        }
+        else {
+            System.out.println("Пользователь не найден :(");
         }
     }
 
     @Override
     public void saveToFile(){
-
+        saveToFile(users, "usersCollection.csv");
     }
 
     @Override

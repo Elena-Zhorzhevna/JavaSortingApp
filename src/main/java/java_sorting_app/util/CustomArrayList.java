@@ -74,23 +74,21 @@ public class CustomArrayList<T> implements Serializable {
     }
 
     public static <T> void selectionSort(CustomArrayList<T> list, Comparator<? super T> comparator) {
-        {
-            for (int i = 0; i < list.size(); i++) {
-                int minPos = i;
-                T minValue = list.get(i);
-                for (int j = i + 1; j < list.size(); j++) {
-                    T current = list.get(j);
+        for (int i = 0; i < list.size(); i++) {
+            int minPos = i;
+            T minValue = list.get(i);
+            for (int j = i + 1; j < list.size(); j++) {
+                T current = list.get(j);
 
-                    if (comparator.compare(current, minValue) < 0) {
-                        minPos = j;
-                        minValue = current;
-                    }
+                if (comparator.compare(current, minValue) < 0) {
+                    minPos = j;
+                    minValue = current;
                 }
-                if (minPos != i) {
-                    T temp = list.get(i);
-                    list.set(i, minValue);
-                    list.set(minPos, temp);
-                }
+            }
+            if (minPos != i) {
+                T temp = list.get(i);
+                list.set(i, minValue);
+                list.set(minPos, temp);
             }
         }
     }

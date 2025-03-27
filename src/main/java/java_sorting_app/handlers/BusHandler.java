@@ -36,7 +36,7 @@ public class BusHandler extends Handler{
     }
 
     private Handler saveToFile() {
-        //getDAOModel().();
+        getDAOModel().saveToFile();
         return this;
     }
 

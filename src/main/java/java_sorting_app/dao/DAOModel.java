@@ -5,6 +5,8 @@ import java_sorting_app.util.CustomArrayList;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Random;
 
@@ -68,8 +70,8 @@ public interface DAOModel {
     }
 
     default void saveToFile(CustomArrayList<? extends SerializableToCSVString> elements, String filename) {
-        URL url = getClass().getResource("/" + filename);
-        File file = new File(url.getFile());
+        Path source = Paths.get(this.getClass().getResource("/").getPath() + filename);
+        File file = source.toFile();
 
         if (!file.exists()) {
             try {
@@ -93,8 +95,8 @@ public interface DAOModel {
     }
 
     default void saveToFile(SerializableToCSVString element, String filename) {
-        URL url = getClass().getResource("/" + filename);
-        File file = new File(url.getFile());
+        Path source = Paths.get(this.getClass().getResource("/").getPath() + filename);
+        File file = source.toFile();
 
         if (!file.exists()) {
             try {
@@ -107,7 +109,7 @@ public interface DAOModel {
                 return;
             }
         }
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
             writer.write(element.toCSVString());
             writer.newLine();
         } catch (IOException e) {
