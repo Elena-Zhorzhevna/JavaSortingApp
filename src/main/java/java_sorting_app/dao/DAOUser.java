@@ -5,6 +5,7 @@ import java_sorting_app.model.User;
 import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
 import java_sorting_app.validator.DataValidator;
+
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
@@ -19,7 +20,7 @@ public class DAOUser implements DAOModel {
     }
 
     @Override
-    public void printElements(){
+    public void printElements() {
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             System.out.println(user);
@@ -36,7 +37,7 @@ public class DAOUser implements DAOModel {
     }
 
     @Override
-    public void magicSortElements(){
+    public void magicSortElements() {
         CustomArrayList.selectionSort(users, User::magicCompare);
     }
 
@@ -44,7 +45,7 @@ public class DAOUser implements DAOModel {
     public void findElement() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Поиск проводиться по имени и e-mail пользователя");
+        System.out.println("Поиск проводится по имени и e-mail пользователя");
         System.out.println("Введите данные искомого пользователя");
         System.out.print("Имя пользователя: ");
         String nameUser = scanner.nextLine();
@@ -59,37 +60,33 @@ public class DAOUser implements DAOModel {
             System.out.println("Не введены данные для поиска");
             System.out.println("Поиск прекращен!");
             return;
-        }
-        else if (nameUser.isEmpty()) {
+        } else if (nameUser.isEmpty()) {
             comparator = Comparator.comparing(User::getEmail);
             userBuilder.withEmail(emailUser);
-        }
-        else if (emailUser.isEmpty()) {
+        } else if (emailUser.isEmpty()) {
             comparator = Comparator.comparing(User::getName);
             userBuilder.withName(nameUser);
-        }
-        else {
+        } else {
             comparator = Comparator.comparing(User::getName).thenComparing(User::getEmail);
             userBuilder.withName(nameUser).withEmail(emailUser);
         }
 
         User user = userBuilder.build();
         int index = BinarySearch.search(users, user, comparator);
-        if(index >= 0){
+        if (index >= 0) {
             System.out.println("Найден пользователь: " + users.get(index));
             System.out.println("Сохранить найденного пользователя в файл? (y/n)");
 
-            if(scanner.next().equalsIgnoreCase("y")){
-                saveToFile(users.get(index), "usersFinded.csv");
+            if (scanner.next().equalsIgnoreCase("y")) {
+                saveToFile(users.get(index), "usersFound.csv");
             }
-        }
-        else {
+        } else {
             System.out.println("Пользователь не найден :(");
         }
     }
 
     @Override
-    public void saveToFile(){
+    public void saveToFile() {
         saveToFile(users, "usersCollection.csv");
     }
 
@@ -137,31 +134,38 @@ public class DAOUser implements DAOModel {
                 if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
                     Optional<User> userOptional = User.fromCSVString(stringObjectCSV);
                     userOptional.ifPresent(user -> {
-                        users.add(user);
-                        System.out.println("Загружен пользователь: " + user.toString());
+
+                        Optional<String> validatedName = DataValidator.validateAndReturnUserName(user.getName());
+                        Optional<String> validatedPassword = DataValidator.validateAndReturnPassword(user.getPassword());
+                        Optional<String> validatedEmail = DataValidator.validateAndReturnEmail(user.getEmail());
+
+                        if (validatedName.isPresent() && validatedPassword.isPresent() && validatedEmail.isPresent()) {
+                            users.add(user);
+                            System.out.println("Загружен пользователь: " + user.toString());
+                        } else {
+                            System.out.println("Ошибка: данные пользователя " + user + " невалидны");
+                        }
                     });
                 }
             }
-            System.out.println("Пользователей в коллекции : " + users.size());
+            System.out.println("Пользователей в коллекции: " + users.size());
         } else {
             System.out.println("Не удалось загрузить данные из файла");
         }
     }
 
-    @Override
     public void loadRandom() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите количество пользователей для генерации:");
         int numberToGenerate = scanner.nextInt();
 
-
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        String specialChars = "!@#$%^&*()-_=+<>?";
+        String specialChars = "!@#$%*?&";  // Специальные символы, указанные в регулярке
 
         for (int i = 0; i < numberToGenerate; i++) {
             String name = generateRandomString(alphabet, 8);
 
-            String password = generateRandomString(alphabet + specialChars, 12);
+            String password = generateValidPassword(9, 12, alphabet + specialChars);
 
             String email = "user" + generateRandomString(alphabet + "0123456789", 4)
                     + "@example.ru";
@@ -178,7 +182,27 @@ public class DAOUser implements DAOModel {
         System.out.println("Всего сгенерировано " + users.size() + " пользователей.");
     }
 
-    private String generateRandomString(String characterSet, int length) {
+    private static String generateValidPassword(int minLength, int maxLength, String characterSet) {
+        Random random = new Random();
+        String password = "";
+        String specialChars = "!@#$%*?&";
+
+        password += characterSet.charAt(random.nextInt(specialChars.length()));
+
+        while (password.length() < minLength) {
+            password += characterSet.charAt(random.nextInt(characterSet.length()));
+        }
+
+        if (password.length() < maxLength) {
+            int remainingLength = random.nextInt(maxLength - password.length()) + 1;
+            for (int i = 0; i < remainingLength; i++) {
+                password += characterSet.charAt(random.nextInt(characterSet.length()));
+            }
+        }
+        return password;
+    }
+
+    private static String generateRandomString(String characterSet, int length) {
         Random random = new Random();
         String result = "";
         for (int i = 0; i < length; i++) {

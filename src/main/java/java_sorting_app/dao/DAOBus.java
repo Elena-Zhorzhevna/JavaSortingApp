@@ -4,7 +4,7 @@ import java_sorting_app.model.Bus;
 import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
 import java_sorting_app.validator.DataValidator;
-
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -29,37 +29,14 @@ public class DAOBus implements DAOModel {
         buses.add(element);
     }
 
-
     public void addAll(CustomArrayList<Bus> elements) {
         for (int index = 0; index < elements.size(); index++) {
             buses.add(elements.get(index));
         }
     }
 
-
     public CustomArrayList<Bus> getElements() {
         return buses;
-    }
-
-    @Override
-    public void findElement() {
-        Optional<Bus> busOptional = Bus.fromCSVString("");
-        if(busOptional.isPresent()) {
-            Bus bus = busOptional.get();
-            int index = 0;
-            index = BinarySearch.search(buses, bus);
-            if(index >= 0){
-                System.out.println("Найден автобус: " + buses.get(index));
-                System.out.println("Сохранить найденный автобус в файл? (y/n)");
-                Scanner scanner = new Scanner(System.in);
-                if(scanner.next().toLowerCase().equals("y")){
-                    saveToFile(buses.get(index), "busesFinded.csv");
-                }
-            }
-            else {
-                System.out.println("Автобус не найден :(");
-            }
-        }
     }
 
     @Override
@@ -73,8 +50,34 @@ public class DAOBus implements DAOModel {
     }
 
     @Override
-    public void saveToFile(){
+    public void findElement() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Поиск проводится по номеру автобуса.");
+        System.out.print("Введите номер автобуса: ");
+        String busNumber = scanner.nextLine();
 
+        Bus.BusBuilder busBuilder = new Bus.BusBuilder();
+        Comparator<Bus> comparator = Comparator.comparing(Bus::getNumber);
+        busBuilder.withNumber(busNumber);
+
+        Bus bus = busBuilder.build();
+
+        int index = BinarySearch.search(buses, bus, comparator);
+        if (index >= 0) {
+            System.out.println("Найден автобус: " + buses.get(index));
+            System.out.println("Сохранить найденный автобус в файл? (y/n)");
+
+            if (scanner.next().equalsIgnoreCase("y")) {
+                saveToFile(buses.get(index), "busesFound.csv");
+            }
+        } else {
+            System.out.println("Автобус не найден :(");
+        }
+    }
+
+    @Override
+    public void saveToFile(){
+        saveToFile(buses, "busesCollection.csv");
     }
 
     @Override
