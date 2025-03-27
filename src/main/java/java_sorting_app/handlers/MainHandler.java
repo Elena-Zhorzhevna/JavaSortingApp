@@ -17,6 +17,7 @@ public class MainHandler extends Handler {
     }
 
     public Handler exit(){
+        System.exit(0);
         return parentHandler;
     }
 

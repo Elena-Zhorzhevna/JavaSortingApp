@@ -29,13 +29,19 @@ public abstract class Handler {
         return menuController.buildMenu();
     }
 
-    public Handler process(int numberMenu) {
-        if (!menuController.containsItem(numberMenu)) {
-            System.out.println("Menu doesn't exist");
+    public Handler process(String numberMenu) {
+        try {
+            int menuNum = Integer.parseInt(numberMenu);
+            if (!menuController.containsItem(menuNum)) {
+                System.out.println("Menu doesn't exist");
+                return this;
+            }
+            IProcessor<Handler> handler = menuController.getHandler(menuNum);
+            return handler.process();
+        }
+        catch (NumberFormatException e) {
             return this;
         }
-        IProcessor<Handler> handler = menuController.getHandler(numberMenu);
-        return handler.process();
     }
 
 }
