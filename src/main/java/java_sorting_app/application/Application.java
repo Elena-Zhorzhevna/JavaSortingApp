@@ -10,12 +10,12 @@ public class Application {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         State state = new State(new MainHandler());
-        int numberOfMenu;
+        String inputLine;
         do {
             System.out.print(state.getMenu());
-            numberOfMenu = scanner.nextInt();
+            inputLine = scanner.nextLine();
         }
-        while (state.handle(numberOfMenu));
+        while (state.handle(inputLine));
         scanner.close();
     }
 }

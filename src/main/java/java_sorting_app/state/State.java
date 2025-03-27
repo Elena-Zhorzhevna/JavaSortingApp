@@ -15,11 +15,18 @@ public class State {
         return handler.getMenu();
     }
 
-    public boolean handle(int menuItem){
-        handler = handler.process(menuItem);
-        if(handler == null) {
-            return false;
+    public boolean handle(String menuItem){
+        int menuNum = -1;
+        try {
+            menuNum = Integer.parseInt(menuItem);
+            handler = handler.process(menuNum);
+            if(handler == null) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        catch (NumberFormatException e) {
+            return true;
+        }
     }
 }
