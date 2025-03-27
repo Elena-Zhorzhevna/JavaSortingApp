@@ -1,5 +1,9 @@
 package java_sorting_app.validator;
 
+import java_sorting_app.model.Bus;
+import java_sorting_app.model.Student;
+import java_sorting_app.model.User;
+
 import java.util.Optional;
 
 public class DataValidator {
@@ -98,5 +102,75 @@ public class DataValidator {
             return Optional.of(email);
         }
         return Optional.empty();
+    }
+
+    public static Optional<Bus> validateAndReturnBusWithComment(String number, String model, String mileage) {
+
+        Bus.BusBuilder busBuilder = Bus.create();
+
+        Optional<String> numberOptional = validateAndReturnBusNumber(number);
+        numberOptional.ifPresentOrElse(busBuilder::withNumber,
+                () -> System.out.println("Некорректный номер автобуса."));
+
+        Optional<String> modelOptional = validateAndReturnBusModel(model);
+        modelOptional.ifPresentOrElse(busBuilder::withModel,
+                () -> System.out.println("Некорректная модель автобуса."));
+
+        Optional<Integer> mileageOptional = validateAndReturnMileage(mileage);
+        mileageOptional.ifPresentOrElse(busBuilder::withMileage,
+                () -> System.out.println("Некорректное значение пробега автобуса.")
+        );
+
+        Bus bus = busBuilder.build();
+
+        return Optional.of(bus);
+    }
+
+    public static Optional<User> validateAndReturnUserWithComment(String userName, String userEmail, String userPassword) {
+
+        User.UserBuilder userBuilder = User.create();
+
+        Optional<String> nameOptional = validateAndReturnUserName(userName);
+        nameOptional.ifPresentOrElse(userBuilder::withName,
+                () -> System.out.println("Некорректное имя пользователя"));
+
+        Optional<String> emailOptional = validateAndReturnEmail(userEmail);
+        emailOptional.ifPresentOrElse(userBuilder::withEmail,
+                () -> System.out.println("Некорректный email пользователя"));
+
+        Optional<String> passwordOptional = validateAndReturnPassword(userPassword);
+        passwordOptional.ifPresentOrElse(userBuilder::withPassword,
+                () -> System.out.println("Некорректный пароль.\n" +
+                        "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
+                        "Заглавную латинскую букву (A-Z)\n" +
+                        "Строчную латинскую букву (a-z)\n" +
+                        "Цифру\n" +
+                        "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.")
+        );
+
+        User user = userBuilder.build();
+
+        return Optional.of(user);
+    }
+
+    public static Optional<Student> validateAndReturnStudentWithComment(
+            String studentGroupNumber, String studentAverageGrade, String studentBookNumber) {
+
+        Student.StudentBuilder studentBuilder = Student.create();
+
+        Optional<Integer> groupNumberOptional = validateAndReturnGroupNumber(studentGroupNumber);
+        groupNumberOptional.ifPresentOrElse(studentBuilder::withGroupNumber,
+                () -> System.out.println("Некорректный номер группы."));
+
+        Optional<Double> averageGradeOptional = validateAndReturnAverageGrade(studentAverageGrade);
+        averageGradeOptional.ifPresentOrElse(studentBuilder::withAverageGrade,
+                () -> System.out.println("Некорректный средний балл."));
+
+        Optional<Long> studentBookNumberOptional = validateAndReturnStudentBookNumber(studentBookNumber);
+        studentBookNumberOptional.ifPresentOrElse(studentBuilder::withStudentBookNumber,
+                () -> System.out.println("Некорректный номер студенческого билета."));
+
+        Student student = studentBuilder.build();
+        return Optional.of(student);
     }
 }

@@ -98,7 +98,7 @@ public class DAOUser implements DAOModel {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Введите пользователя в формате: имя ; e-mail ; пароль");
+            System.out.println("Введите пользователя в формате: имя, e-mail, пароль");
             System.out.println("Или введите 'exit' для завершения");
             System.out.print("? > ");
 
@@ -106,8 +106,17 @@ public class DAOUser implements DAOModel {
             if (inputLine.equalsIgnoreCase("exit")) {
                 break;
             }
+            String[] userData = inputLine.split(",");
+            if (userData.length != 3) {
+                System.err.println("Ошибка в данных файла: строка не соответствует формату.");
+                continue;
+            }
 
-            Optional<User> userOptional = User.fromCSVString(inputLine);
+            String userName = userData[0].trim();
+            String userEmail = userData[1].trim();
+            String userPassword = userData[2].trim();
+
+            Optional<User> userOptional = DataValidator.validateAndReturnUserWithComment(userName, userEmail, userPassword);
             userOptional.ifPresent(users::add);
             userOptional.ifPresentOrElse(
                     user -> System.out.println("Вы добавили пользователя: " + user),

@@ -95,19 +95,20 @@ public class Student implements Comparable<Student>, SerializableToCSVString {
             return Optional.empty();
         }
 
+        String studentGroupNumber = studentData[0];
+        String studentAverageGrade = studentData[1];
+        String studentBookNumber = studentData[2];
+
         StudentBuilder studentBuilder = Student.create();
 
-        Optional<Integer> groupNumberOptional = DataValidator.validateAndReturnGroupNumber(studentData[0]);
-        groupNumberOptional.ifPresentOrElse(studentBuilder::withGroupNumber,
-                () -> System.err.println("Некорректный номер группы."));
+        Optional<Integer> groupNumberOptional = DataValidator.validateAndReturnGroupNumber(studentGroupNumber);
+        groupNumberOptional.ifPresent(studentBuilder::withGroupNumber);
 
-        Optional<Double> averageGradeOptional = DataValidator.validateAndReturnAverageGrade(studentData[1]);
-        averageGradeOptional.ifPresentOrElse(studentBuilder::withAverageGrade,
-                () -> System.err.println("Некорректный средний балл."));
+        Optional<Double> averageGradeOptional = DataValidator.validateAndReturnAverageGrade(studentAverageGrade);
+        averageGradeOptional.ifPresent(studentBuilder::withAverageGrade);
 
-        Optional<Long> studentBookNumberOptional = DataValidator.validateAndReturnStudentBookNumber(studentData[2]);
-        studentBookNumberOptional.ifPresentOrElse(studentBuilder::withStudentBookNumber,
-                () -> System.err.println("Некорректный номер студенческого билета."));
+        Optional<Long> studentBookNumberOptional = DataValidator.validateAndReturnStudentBookNumber(studentBookNumber);
+        studentBookNumberOptional.ifPresent(studentBuilder::withStudentBookNumber);
 
         Student student = studentBuilder.build();
         return Optional.of(student);

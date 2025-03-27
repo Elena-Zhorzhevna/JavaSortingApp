@@ -90,28 +90,23 @@ public class Bus implements Comparable<Bus>, SerializableToCSVString {
 
         String[] busData = stringObjectCSV.split(";");
         if (busData.length != 3) {
-            System.err.println("Ошибка в данных файла: строка не соответствует формату.");
             return Optional.empty();
         }
 
-        String number = busData[0].trim();
-        String model = busData[1].trim();
-        int mileage = Integer.parseInt(busData[2].trim());
+        String number = busData[0];
+        String model = busData[1];
+        String mileage = busData[2];
 
         BusBuilder busBuilder = Bus.create();
 
         Optional<String> numberOptional = DataValidator.validateAndReturnBusNumber(number);
-        numberOptional.ifPresentOrElse(busBuilder::withNumber,
-                () -> System.err.println("Некорректный номер автобуса из файла."));
+        numberOptional.ifPresent(busBuilder::withNumber);
 
         Optional<String> modelOptional = DataValidator.validateAndReturnBusModel(model);
-        modelOptional.ifPresentOrElse(busBuilder::withModel,
-                () -> System.err.println("Некорректная модель автобуса из файла."));
+        modelOptional.ifPresent(busBuilder::withModel);
 
-        Optional<Integer> mileageOptional = DataValidator.validateAndReturnMileage(String.valueOf(mileage));
-        mileageOptional.ifPresentOrElse(busBuilder::withMileage,
-                () -> System.err.println("Некорректное значение пробега автобуса из файла.")
-        );
+        Optional<Integer> mileageOptional = DataValidator.validateAndReturnMileage(mileage);
+        mileageOptional.ifPresent(busBuilder::withMileage);
 
         Bus bus = busBuilder.build();
 

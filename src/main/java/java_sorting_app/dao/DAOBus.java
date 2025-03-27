@@ -3,6 +3,8 @@ package java_sorting_app.dao;
 import java_sorting_app.model.Bus;
 import java_sorting_app.util.BinarySearch;
 import java_sorting_app.util.CustomArrayList;
+import java_sorting_app.validator.DataValidator;
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -80,7 +82,7 @@ public class DAOBus implements DAOModel {
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
-            System.out.println("Введите автобус в формате: номер ; модель ; пробег");
+            System.out.println("Введите данные автобуса в формате: номер, модель, пробег");
             System.out.println("Или введите 'exit' для завершения");
             System.out.print("? > ");
 
@@ -89,7 +91,17 @@ public class DAOBus implements DAOModel {
                 break;
             }
 
-            Optional<Bus> busOptional = Bus.fromCSVString(inputLine);
+            String[] busData = inputLine.split(",");
+            if (busData.length != 3) {
+                System.err.println("Ошибка в данных файла: строка не соответствует формату.");
+                continue;
+            }
+
+            String number = busData[0].trim();
+            String model = busData[1].trim();
+            String mileage = busData[2].trim();
+
+            Optional<Bus> busOptional = DataValidator.validateAndReturnBusWithComment(number, model, mileage);
             busOptional.ifPresent(buses::add);
             busOptional.ifPresentOrElse(
                     bus -> System.out.println("Вы добавили автобус: " + bus),

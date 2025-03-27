@@ -1,5 +1,5 @@
 package java_sorting_app.controllers;
-import java_sorting_app.dao.DAOModel;
+
 import java_sorting_app.menu.MenuController;
 
 
@@ -25,7 +25,7 @@ public abstract class Controller {
         try {
             int menuNum = Integer.parseInt(numberMenu);
             if (!menuController.containsItem(menuNum)) {
-                System.out.println("Menu doesn't exist");
+                System.out.println("Введенный пункт меню не существует!");
                 return this;
             }
             IProcessor<Controller> handler = menuController.getHandler(menuNum);

@@ -1,7 +1,6 @@
 package java_sorting_app.controllers;
 
 import java_sorting_app.dao.DAOBus;
-import java_sorting_app.dao.DAOModel;
 
 
 public class BusController extends Controller {

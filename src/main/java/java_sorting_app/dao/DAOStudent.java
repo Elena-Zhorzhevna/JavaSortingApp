@@ -2,6 +2,7 @@ package java_sorting_app.dao;
 
 import java_sorting_app.model.Student;
 import java_sorting_app.util.CustomArrayList;
+import java_sorting_app.validator.DataValidator;
 
 import java.util.Optional;
 import java.util.Random;
@@ -71,7 +72,19 @@ public class DAOStudent implements DAOModel{
                 break;
             }
 
-            Optional<Student> studentOptional = Student.fromCSVString(inputLine);
+            String[] studentData = inputLine.split(",");
+            if (studentData.length != 3) {
+                System.err.println("Ошибка в данных файла: строка не соответствует формату.");
+                continue;
+            }
+
+            String studentGroupNumber = studentData[0].trim();
+            String studentAverageGrade = studentData[1].trim();
+            String studentBookNumber = studentData[2].trim();
+
+            Optional<Student> studentOptional = DataValidator.validateAndReturnStudentWithComment(
+                    studentGroupNumber, studentAverageGrade, studentBookNumber);
+
             studentOptional.ifPresent(students::add);
             studentOptional.ifPresentOrElse(
                     student -> System.out.println("Вы добавили студента: " + student),

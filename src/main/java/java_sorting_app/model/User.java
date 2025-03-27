@@ -92,29 +92,23 @@ public class User implements Comparable<User>, SerializableToCSVString {
 
         String[] userData = stringObjectCSV.split(";");
         if (userData.length != 3) {
-            System.err.println("Ошибка в данных - строка не соответствует формату.");
             return Optional.empty();
         }
 
+        String userName = userData[0];
+        String userEmail = userData[1];
+        String userPassword = userData[2];
+
         User.UserBuilder userBuilder = User.create();
 
-        Optional<String> nameOptional = DataValidator.validateAndReturnUserName(userData[0].trim());
-        nameOptional.ifPresentOrElse(userBuilder::withName,
-                () -> System.err.println("У пользователя обязательно должно быть имя"));
+        Optional<String> nameOptional = DataValidator.validateAndReturnUserName(userName);
+        nameOptional.ifPresent(userBuilder::withName);
 
-        Optional<String> emailOptional = DataValidator.validateAndReturnEmail(userData[1].trim());
-        emailOptional.ifPresentOrElse(userBuilder::withEmail,
-                () -> System.err.println("Некорректный email пользователя"));
+        Optional<String> emailOptional = DataValidator.validateAndReturnEmail(userEmail);
+        emailOptional.ifPresent(userBuilder::withEmail);
 
-        Optional<String> passwordOptional = DataValidator.validateAndReturnPassword(userData[2]);
-        passwordOptional.ifPresentOrElse(userBuilder::withPassword,
-                () -> System.out.println("Некорректный пароль.\n" +
-                        "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
-                        "Заглавную латинскую букву (A-Z)\n" +
-                        "Строчную латинскую букву (a-z)\n" +
-                        "Цифру\n" +
-                        "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.")
-        );
+        Optional<String> passwordOptional = DataValidator.validateAndReturnPassword(userPassword);
+        passwordOptional.ifPresent(userBuilder::withPassword);
 
         User user = userBuilder.build();
 
