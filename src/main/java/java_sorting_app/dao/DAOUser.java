@@ -42,32 +42,34 @@ public class DAOUser implements DAOModel {
         Scanner scanner = new Scanner(System.in);
         String inputLine = scanner.nextLine();
 
-        String[] elements = inputLine.split(";");
-        if (elements.length != 2) {
+        String[] userData = inputLine.split(";");
+        if (userData.length != 2) {
             System.out.println("Введены некорректные данные");
             System.out.println("Поиск прекращен");
             return;
         }
 
-        boolean isValidName = DataValidator.isValidUserName(elements[0]);
-        boolean isValidEmail = DataValidator.isValidEmail(elements[1]);
-
         User.UserBuilder userBuilder = new User.UserBuilder();
         Comparator<User> comparator;
 
-        if (isValidName && isValidEmail) {
+        Optional<String> nameOptional = DataValidator.validateAndReturnUserName(userData[0].trim());
+        nameOptional.ifPresent(userBuilder::withName);
+
+        Optional<String> emailOptional = DataValidator.validateAndReturnEmail(userData[1].trim());
+        emailOptional.ifPresent(userBuilder::withEmail);
+
+        if(nameOptional.isPresent() && emailOptional.isPresent()) {
             comparator = Comparator.comparing(User::getName).thenComparing(User::getEmail);
-            userBuilder.withName(elements[0]).withEmail(elements[1]);
         }
-        else if (isValidName) {
+        else if(nameOptional.isPresent()) {
             comparator = Comparator.comparing(User::getName);
-            userBuilder.withName(elements[0]);
         }
-        else if (isValidEmail) {
+        else if(emailOptional.isPresent()) {
             comparator = Comparator.comparing(User::getEmail);
-            userBuilder.withEmail(elements[1]);
         }
         else {
+            System.out.println("Введены некорректные данные");
+            System.out.println("Поиск прекращен");
             return;
         }
 
@@ -123,11 +125,17 @@ public class DAOUser implements DAOModel {
         if (resultOptional.isPresent()) {
             String[] rows = resultOptional.get();
             for (String stringObjectCSV : rows) {
-                Optional<User> userOptional = User.fromCSVString(stringObjectCSV);
-                userOptional.ifPresent(users::add);
+                if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
+                    Optional<User> userOptional = User.fromCSVString(stringObjectCSV);
+                    //userOptional.ifPresent(users::add);
+                    userOptional.ifPresent(user -> {
+                        users.add(user);
+                        System.out.println("Загружен пользователь: " + user.toString());
+                    });
+                }
             }
-        }
-        else {
+            System.out.println("Пользователей в коллекции : " + users.size());
+        } else {
             System.out.println("Не удалось загрузить данные из файла");
         }
     }
@@ -152,11 +160,14 @@ public class DAOUser implements DAOModel {
 
             User user = User.create()
                     .withName(name)
-                    .withPassword(password)
                     .withEmail(email)
+                    .withPassword(password)
                     .build();
             users.add(user);
+
+            System.out.println("Сгенерирован пользователь: " + user.toString());
         }
+        System.out.println("Всего сгенерировано " + users.size() + " пользователей.");
     }
 
     private String generateRandomString(String characterSet, int length) {

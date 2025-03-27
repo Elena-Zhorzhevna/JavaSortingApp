@@ -38,7 +38,7 @@ public class User implements Comparable<User>, SerializableToCSVString {
     }
 
     @Override
-    public int compareTo(User o){
+    public int compareTo(User o) {
         return Comparator.comparing(User::getName)
                 .thenComparing(User::getEmail)
                 .thenComparing(User::getPassword)
@@ -87,32 +87,23 @@ public class User implements Comparable<User>, SerializableToCSVString {
 
         User.UserBuilder userBuilder = User.create();
 
-        if (DataValidator.isValidUserName(userData[0])) {
-            userBuilder.withName(userData[0]);
-        }
-        else {
-            System.err.println("У пользователя обязательно должно быть имя");
-            return Optional.empty();
-        }
+        Optional<String> nameOptional = DataValidator.validateAndReturnUserName(userData[0].trim());
+        nameOptional.ifPresentOrElse(userBuilder::withName,
+                () -> System.err.println("У пользователя обязательно должно быть имя"));
 
-        if (DataValidator.isValidEmail(userData[1])) {
-            userBuilder.withEmail(userData[1]);
-        }
-        else {
-            System.err.println("Некорректный email пользователя");
-        }
+        Optional<String> emailOptional = DataValidator.validateAndReturnEmail(userData[1].trim());
+        emailOptional.ifPresentOrElse(userBuilder::withEmail,
+                () -> System.err.println("Некорректный email пользователя"));
 
-        if (DataValidator.isValidPassword(userData[2])) {
-            userBuilder.withPassword(userData[2]);
-        }
-        else {
-            System.out.println("Некорректный пароль.\n" +
-                    "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
-                    "Заглавную латинскую букву (A-Z)\n" +
-                    "Строчную латинскую букву (a-z)\n" +
-                    "Цифру\n" +
-                    "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.");
-        }
+        Optional<String> passwordOptional = DataValidator.validateAndReturnPassword(userData[2]);
+        passwordOptional.ifPresentOrElse(userBuilder::withPassword,
+                () -> System.out.println("Некорректный пароль.\n" +
+                        "Пароль должен содержать хотя бы один символ из этих категорий: \n" +
+                        "Заглавную латинскую букву (A-Z)\n" +
+                        "Строчную латинскую букву (a-z)\n" +
+                        "Цифру\n" +
+                        "Специальный символ (@$,!,%,*,?,&) и быть длиннее 8 символов.")
+        );
 
         User user = userBuilder.build();
 

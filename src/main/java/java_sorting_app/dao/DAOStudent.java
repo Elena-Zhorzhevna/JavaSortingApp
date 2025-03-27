@@ -3,6 +3,7 @@ package java_sorting_app.dao;
 import java_sorting_app.model.Bus;
 import java_sorting_app.model.Student;
 import java_sorting_app.util.CustomArrayList;
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -28,7 +29,7 @@ public class DAOStudent implements DAOModel{
     }
 
     public void addAll(CustomArrayList<Student> elements) {
-        for(int i = 0; i < elements.size(); i++){
+        for (int i = 0; i < elements.size(); i++) {
             students.add(elements.get(i));
         }
     }
@@ -84,11 +85,17 @@ public class DAOStudent implements DAOModel{
         if (resultOptional.isPresent()) {
             String[] rows = resultOptional.get();
             for (String stringObjectCSV : rows) {
-                Optional<Student> busOptional = Student.fromCSVString(stringObjectCSV);
-                busOptional.ifPresent(students::add);
+                if (stringObjectCSV != null && !stringObjectCSV.trim().isEmpty()) {
+                    Optional<Student> studentOptional = Student.fromCSVString(stringObjectCSV);
+                    //busOptional.ifPresent(students::add);
+                    studentOptional.ifPresent(student -> {
+                        students.add(student);
+                        System.out.println("Загружен студент: " + student.toString());
+                    });
+                }
             }
-        }
-        else {
+            System.out.println("Всего в файле студентов: " + students.size());
+        } else {
             System.out.println("Не удалось загрузить данные из файла");
         }
     }
@@ -113,6 +120,9 @@ public class DAOStudent implements DAOModel{
                     .build();
 
             students.add(student);
+
+            System.out.println("Сгенерирован студент: " + student.toString());
         }
+        System.out.println("Всего сгенерировано " + students.size() + " студентов.");
     }
 }
